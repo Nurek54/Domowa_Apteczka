@@ -1,10 +1,7 @@
-// src/components/ProtectedRoute.tsx
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
-
-// ✅ type-only importy
 import type { ReactNode } from "react";
 import type { User } from "firebase/auth";
 
@@ -20,7 +17,7 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
         return () => unsub();
     }, []);
 
-    if (loading) return <div className="p-6">Ładowanie...</div>;
+    if (loading) return <div>Ładowanie...</div>;
     if (!user) return <Navigate to="/login" replace />;
 
     return <>{children}</>;

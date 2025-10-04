@@ -1,10 +1,8 @@
 // src/pages/Login.tsx
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { FirebaseError } from "firebase/app";
-import { auth, db, googleProvider } from "../lib/firebase";
+import { auth, googleProvider } from "../lib/firebase";
+import { useState } from "react";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -12,88 +10,57 @@ export default function Login() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    async function handleLogin(e: React.FormEvent) {
+    async function handleEmailLogin(e: React.FormEvent) {
         e.preventDefault();
         setError("");
         try {
-            const userCred = await signInWithEmailAndPassword(auth, email, password);
-            const uid = userCred.user.uid;
-
-            // sprawdź czy user istnieje w kolekcji
-            const ref = doc(db, "users", uid);
-            const snap = await getDoc(ref);
-
-            if (!snap.exists()) {
-                await setDoc(ref, {
-                    name: userCred.user.displayName || "",
-                    email: userCred.user.email || "",
-                    createdAt: new Date().toISOString(),
-                });
-            }
-
-            navigate("/medicines");
-        } catch (err) {
-            setError(
-                err instanceof FirebaseError
-                    ? `Błąd logowania: ${err.message}`
-                    : "Nieznany błąd logowania"
-            );
+            await signInWithEmailAndPassword(auth, email, password);
+            navigate("/mymeds"); // ✅ po zalogowaniu od razu do MyMeds
+        } catch (err: any) {
+            setError("Błąd logowania: " + err.message);
         }
     }
 
     async function handleGoogleLogin() {
-        setError("");
         try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const { user } = result;
-
-            const ref = doc(db, "users", user.uid);
-            const snap = await getDoc(ref);
-
-            if (!snap.exists()) {
-                await setDoc(ref, {
-                    name: user.displayName || "",
-                    email: user.email || "",
-                    createdAt: new Date().toISOString(),
-                });
-            }
-
-            navigate("/medicines");
-        } catch (err) {
-            console.error(err);
+            await signInWithPopup(auth, googleProvider);
+            navigate("/mymeds"); // ✅ po zalogowaniu od razu do MyMeds
+        } catch (err: any) {
             setError("Nie udało się zalogować przez Google.");
         }
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className="text-2xl font-bold mb-6">Domowa Apteczka</h1>
-
-            <form onSubmit={handleLogin} className="flex flex-col gap-3 w-80">
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border rounded p-2"
-                />
-                <input
-                    type="password"
-                    placeholder="Hasło"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="border rounded p-2"
-                />
-                {error && <p className="text-red-600 text-sm">{error}</p>}
-                <button type="submit" className="bg-blue-600 text-white py-2 rounded">
-                    Zaloguj
-                </button>
-            </form>
-
-            <div className="mt-4">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-slate-50">
+            <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8">
+                <h1 className="text-2xl font-bold mb-6 text-center">Zaloguj się</h1>
+                <form onSubmit={handleEmailLogin} className="space-y-4">
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        className="w-full border p-2 rounded"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Hasło"
+                        className="w-full border p-2 rounded"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    <button
+                        type="submit"
+                        className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
+                    >
+                        Zaloguj się
+                    </button>
+                </form>
+                <div className="my-4 text-center text-sm text-gray-500">lub</div>
                 <button
                     onClick={handleGoogleLogin}
-                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    className="w-full border py-2 rounded hover:bg-gray-100"
                 >
                     Zaloguj przez Google
                 </button>
