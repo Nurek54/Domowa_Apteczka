@@ -73,7 +73,7 @@ export default function Register() {
                 createdAt: serverTimestamp(),
             });
 
-            // 3) starter dla apteczki (pusty zestaw leków) — jeśli nie chcesz, usuń ten blok
+            // 3) starter dla apteczki (pusty zestaw leków)
             await addDoc(collection(db, "medicines_sets"), {
                 owner: uid,
                 medicines_id: [],

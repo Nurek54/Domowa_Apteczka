@@ -1,21 +1,18 @@
 // src/App.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Profile from "./pages/Profile";
 import { MyMeds } from "./pages/MyMeds";
 import { AddMed } from "./pages/AddMed";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Plans from "./pages/Plans";
+import AddPlan from "./pages/AddPlan";
+import EditPlan from "./pages/EditPlan";
 
 export default function App() {
     return (
         <Routes>
-            {/* Publiczne */}
             <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
 
-            {/* Strefa po zalogowaniu */}
             <Route
                 path="/mymeds"
                 element={
@@ -24,6 +21,7 @@ export default function App() {
                     </ProtectedRoute>
                 }
             />
+
             <Route
                 path="/addmed"
                 element={
@@ -32,17 +30,35 @@ export default function App() {
                     </ProtectedRoute>
                 }
             />
+
             <Route
-                path="/profile"
+                path="/plans"
                 element={
                     <ProtectedRoute>
-                        <Profile />
+                        <Plans />
                     </ProtectedRoute>
                 }
             />
 
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route
+                path="/addplan"
+                element={
+                    <ProtectedRoute>
+                        <AddPlan />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/editplan/:id"
+                element={
+                    <ProtectedRoute>
+                        <EditPlan />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     );
 }

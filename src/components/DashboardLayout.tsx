@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         const unsub = onAuthStateChanged(auth, (u) => {
             if (!u) {
                 navigate("/login", { replace: true });
-                return; // nie ustawiaj dalej stanu
+                return;
             }
             setDisplayName(u.displayName || "");
             setEmail(u.email || "");
@@ -34,6 +34,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         const map: Record<string, string> = {
             "/mymeds": "Moje leki",
             "/addmed": "Dodaj lek",
+            "/plans": "Plany leczenia",
+            "/addplan": "Dodaj plan leczenia",
             "/profile": "Profil",
         };
         const key = Object.keys(map).find((k) => location.pathname.startsWith(k));
@@ -46,7 +48,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         }`;
 
     if (!authChecked) {
-        // prosty loader zanim sprawdzimy sesję / przekierujemy
         return (
             <div className="grid place-items-center h-screen text-gray-500">
                 Ładowanie…
@@ -63,15 +64,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </div>
 
                 <nav className="flex flex-col gap-2 text-sm">
-                    <NavLink to="/mymeds" className={navClass}>
-                        💊 Moje leki
-                    </NavLink>
-                    <NavLink to="/addmed" className={navClass}>
-                        ➕ Dodaj lek
-                    </NavLink>
-                    <NavLink to="/profile" className={navClass}>
-                        👤 Profil
-                    </NavLink>
+                    <NavLink to="/mymeds" className={navClass}>💊 Moje pixy</NavLink>
+                    <NavLink to="/addmed" className={navClass}>➕ Dodaj lek</NavLink>
+                    <NavLink to="/plans" className={navClass}>🗓️ Plany</NavLink>
+                    <NavLink to="/addplan" className={navClass}>➕ Plan chlania</NavLink>
+                    <NavLink to="/profile" className={navClass}>👤 Profil</NavLink>
                 </nav>
 
                 <div className="mt-auto rounded-xl bg-gray-50 p-3">
@@ -92,10 +89,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 {/* Header */}
                 <header className="flex items-center justify-between bg-white border-b p-4">
                     <h1 className="text-xl font-semibold">{pageTitle}</h1>
-                    <button
-                        onClick={handleLogout}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
-                    >
+                    <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded">
                         Wyloguj
                     </button>
                 </header>
