@@ -1,3 +1,4 @@
+// src/pages/MyMeds.tsx
 import { useEffect, useMemo, useState } from "react";
 import { auth, db } from "../lib/firebase";
 import {
@@ -10,6 +11,12 @@ import {
     where,
 } from "firebase/firestore";
 import DashboardLayout from "../components/DashboardLayout";
+import {
+    CATEGORIES,
+    CATEGORY_BY_ID,
+    formatCategoryForDisplay,
+    type MedCategory,
+} from "../constants/categories";
 
 /* ───────── Types zgodne z bazą ───────── */
 type Med = {
@@ -18,8 +25,8 @@ type Med = {
     dose: string;
     quantity: number;
     unit: string;
-    date: string;      // YYYY-MM-DD
-    category: string;
+    date: string; // YYYY-MM-DD
+    category: string; // może być ID (nowe) albo wolny tekst (stare)
     notes?: string;
 };
 
@@ -64,14 +71,18 @@ export function MyMeds() {
             try {
                 const uref = doc(db, "users", user.uid);
                 const usnap = await getDoc(uref);
-                const name = (usnap.exists() && (usnap.data() as any).name) || user.displayName;
+                const name =
+                    (usnap.exists() && (usnap.data() as any).name) || user.displayName;
                 setUserName(name || user.email?.split("@")[0] || "User");
             } catch {
                 setUserName(user.displayName || user.email?.split("@")[0] || "User");
             }
 
             // ── pobranie ID leków z medicines_sets ──
-            const qSets = query(collection(db, "medicines_sets"), where("owner", "==", user.uid));
+            const qSets = query(
+                collection(db, "medicines_sets"),
+                where("owner", "==", user.uid)
+            );
             const setsSnap = await getDocs(qSets);
 
             const medIds: string[] = [];
@@ -96,16 +107,26 @@ export function MyMeds() {
         fetchData();
     }, []);
 
-    // Kategorie do selektora
-    const categories = useMemo(() => {
-        const set = new Set<string>();
-        meds.forEach((m) => m.category && set.add(m.category.trim()));
-        return ["all", ...Array.from(set).sort((a, b) => a.localeCompare(b))];
+    // Kategorie predefiniowane + ewentualne "inne" ze starych wpisów
+    const categoryOptions = useMemo(() => {
+        const knownIds = new Set<MedCategory>(CATEGORIES.map((c) => c.id));
+        const extras = new Set<string>();
+        meds.forEach((m) => {
+            const raw = (m.category || "").trim();
+            if (!raw) return;
+            if (!knownIds.has(raw as MedCategory)) extras.add(raw);
+        });
+        return {
+            predefined: CATEGORIES,
+            extras: Array.from(extras).sort((a, b) => a.localeCompare(b)),
+        };
     }, [meds]);
 
     // Liczniki do kafelków
     const { okCount, soonCount, expiredCount } = useMemo(() => {
-        let ok = 0, soon = 0, exp = 0;
+        let ok = 0,
+            soon = 0,
+            exp = 0;
         meds.forEach((m) => {
             const s = statusOf(m.date);
             if (s === "ok") ok++;
@@ -136,7 +157,12 @@ export function MyMeds() {
                     cmp = (a.name || "").localeCompare(b.name || "");
                     break;
                 case "category":
-                    cmp = (a.category || "").localeCompare(b.category || "");
+                    // sortuj po etykiecie user-friendly
+                    const A =
+                        CATEGORY_BY_ID[a.category as MedCategory]?.label || a.category || "";
+                    const B =
+                        CATEGORY_BY_ID[b.category as MedCategory]?.label || b.category || "";
+                    cmp = A.localeCompare(B);
                     break;
                 case "quantity":
                     cmp = (a.quantity || 0) - (b.quantity || 0);
@@ -153,10 +179,12 @@ export function MyMeds() {
         if (!med) return;
         const newQty = Math.max(0, (med.quantity || 0) + delta);
         await updateDoc(doc(db, "medicines", id), { quantity: newQty });
-        setMeds((prev) => prev.map((m) => (m.id === id ? { ...m, quantity: newQty } : m)));
+        setMeds((prev) =>
+            prev.map((m) => (m.id === id ? { ...m, quantity: newQty } : m))
+        );
     };
 
-    // UI plakietki statusu bez zależności od custom CSS
+    // UI plakietki statusu
     const StatusPill = ({ date }: { date: string }) => {
         const d = daysUntil(date);
         const s = statusOf(date);
@@ -185,21 +213,32 @@ export function MyMeds() {
         <DashboardLayout>
             {/* Powitanie */}
             <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-800">👋 Hello, {userName}</h1>
+                <h1 className="text-2xl font-semibold text-gray-800">
+                    👋 Hello, {userName}
+                </h1>
                 <p className="text-gray-500">Oto Twoja domowa apteczka</p>
             </div>
 
             {/* Kafelki statusów */}
             <div className="grid gap-4 md:grid-cols-3 mb-6">
-                <button onClick={() => setStatusFilter("ok")} className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left">
+                <button
+                    onClick={() => setStatusFilter("ok")}
+                    className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left"
+                >
                     <div className="text-sm text-gray-500 mb-1">W terminie</div>
                     <div className="text-3xl font-semibold">{okCount}</div>
                 </button>
-                <button onClick={() => setStatusFilter("soon")} className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left">
+                <button
+                    onClick={() => setStatusFilter("soon")}
+                    className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left"
+                >
                     <div className="text-sm text-gray-500 mb-1">&lt; 30 dni do terminu</div>
                     <div className="text-3xl font-semibold">{soonCount}</div>
                 </button>
-                <button onClick={() => setStatusFilter("expired")} className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left">
+                <button
+                    onClick={() => setStatusFilter("expired")}
+                    className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left"
+                >
                     <div className="text-sm text-gray-500 mb-1">Po terminie</div>
                     <div className="text-3xl font-semibold">{expiredCount}</div>
                 </button>
@@ -229,11 +268,23 @@ export function MyMeds() {
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
                         >
-                            {categories.map((c) => (
-                                <option key={c} value={c}>
-                                    {c === "all" ? "Wszystkie" : c}
-                                </option>
-                            ))}
+                            <option value="all">Wszystkie</option>
+                            <optgroup label="Predefiniowane">
+                                {categoryOptions.predefined.map((c) => (
+                                    <option key={c.id} value={c.id}>
+                                        {c.emoji} {c.label}
+                                    </option>
+                                ))}
+                            </optgroup>
+                            {categoryOptions.extras.length > 0 && (
+                                <optgroup label="Inne (z danych)">
+                                    {categoryOptions.extras.map((raw) => (
+                                        <option key={raw} value={raw}>
+                                            {raw}
+                                        </option>
+                                    ))}
+                                </optgroup>
+                            )}
                         </select>
                     </div>
                 </div>
@@ -280,13 +331,19 @@ export function MyMeds() {
                             className="bg-white shadow rounded-lg p-4 flex flex-col gap-2 border border-gray-100 hover:shadow-md transition"
                         >
                             <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-lg text-indigo-700">{med.name}</h3>
+                                <h3 className="font-semibold text-lg text-indigo-700">
+                                    {med.name}
+                                </h3>
                                 <StatusPill date={med.date} />
                             </div>
 
                             <p className="text-sm text-gray-600">Dawka: {med.dose}</p>
-                            <p className="text-sm text-gray-600">Ilość: {med.quantity} {med.unit}</p>
-                            <p className="text-sm text-gray-600">Kategoria: {med.category || "—"}</p>
+                            <p className="text-sm text-gray-600">
+                                Ilość: {med.quantity} {med.unit}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                                Kategoria: {formatCategoryForDisplay(med.category)}
+                            </p>
                             <p className="text-sm text-gray-600">Data ważności: {med.date}</p>
 
                             <div className="flex gap-2 mt-3">

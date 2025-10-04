@@ -9,16 +9,17 @@ import {
     arrayUnion,
     getDocs,
     query,
-    where
+    where,
 } from "firebase/firestore";
 import DashboardLayout from "../components/DashboardLayout";
+import { CATEGORIES, type MedCategory } from "../constants/categories";
 
 export function AddMed() {
     const [name, setName] = useState("");
     const [dose, setDose] = useState("");
     const [quantity, setQuantity] = useState<number>(0);
     const [unit, setUnit] = useState("pcs");
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState<MedCategory>("other"); // ✅ predefiniowane ID
     const [date, setDate] = useState("");
     const [notes, setNotes] = useState("");
 
@@ -27,13 +28,13 @@ export function AddMed() {
         const user = auth.currentUser;
         if (!user) return;
 
-        // 1) dodaj dokument w "medicines" – BEZ timestampów
+        // 1) dodaj dokument w "medicines"
         const medRef = await addDoc(collection(db, "medicines"), {
             name,
             dose,
             quantity,
             unit,
-            category,
+            category, // np. "derma"
             date,
             notes,
         });
@@ -53,8 +54,13 @@ export function AddMed() {
         }
 
         alert("Lek dodany!");
-        setName(""); setDose(""); setQuantity(0); setUnit("pcs");
-        setCategory(""); setDate(""); setNotes("");
+        setName("");
+        setDose("");
+        setQuantity(0);
+        setUnit("pcs");
+        setCategory("other");
+        setDate("");
+        setNotes("");
     };
 
     return (
@@ -64,22 +70,43 @@ export function AddMed() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium">Nazwa leku</label>
-                        <input className="w-full border rounded p-2" value={name} onChange={(e)=>setName(e.target.value)} required />
+                        <input
+                            className="w-full border rounded p-2"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium">Dawka</label>
-                        <input className="w-full border rounded p-2" value={dose} onChange={(e)=>setDose(e.target.value)} required />
+                        <input
+                            className="w-full border rounded p-2"
+                            value={dose}
+                            onChange={(e) => setDose(e.target.value)}
+                            required
+                        />
                     </div>
 
                     <div className="flex gap-3">
                         <div className="flex-1">
                             <label className="block text-sm font-medium">Ilość</label>
-                            <input type="number" className="w-full border rounded p-2" value={quantity} onChange={(e)=>setQuantity(Number(e.target.value))} required />
+                            <input
+                                type="number"
+                                className="w-full border rounded p-2"
+                                value={quantity}
+                                onChange={(e) => setQuantity(Number(e.target.value))}
+                                required
+                                min={0}
+                            />
                         </div>
                         <div>
                             <label className="block text-sm font-medium">Jednostka</label>
-                            <select className="w-full border rounded p-2" value={unit} onChange={(e)=>setUnit(e.target.value)}>
+                            <select
+                                className="w-full border rounded p-2"
+                                value={unit}
+                                onChange={(e) => setUnit(e.target.value)}
+                            >
                                 <option value="pcs">szt</option>
                                 <option value="ml">ml</option>
                                 <option value="mg">mg</option>
@@ -89,20 +116,46 @@ export function AddMed() {
 
                     <div>
                         <label className="block text-sm font-medium">Kategoria</label>
-                        <input className="w-full border rounded p-2" value={category} onChange={(e)=>setCategory(e.target.value)} />
+                        <select
+                            className="w-full border rounded p-2"
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value as MedCategory)}
+                        >
+                            {CATEGORIES.map((c) => (
+                                <option key={c.id} value={c.id}>
+                                    {c.emoji} {c.label}
+                                </option>
+                            ))}
+                        </select>
+                        <p className="mt-1 text-xs text-gray-500">
+                            Wybierz z listy predefiniowanych kategorii.
+                        </p>
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium">Data ważności</label>
-                        <input type="date" className="w-full border rounded p-2" value={date} onChange={(e)=>setDate(e.target.value)} required />
+                        <input
+                            type="date"
+                            className="w-full border rounded p-2"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                        />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium">Uwagi</label>
-                        <textarea className="w-full border rounded p-2" value={notes} onChange={(e)=>setNotes(e.target.value)} />
+                        <textarea
+                            className="w-full border rounded p-2"
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                        />
                     </div>
 
-                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded py-2 font-medium">
+                    <button
+                        type="submit"
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded py-2 font-medium"
+                    >
                         Zapisz
                     </button>
                 </form>
