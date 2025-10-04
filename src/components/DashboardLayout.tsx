@@ -64,10 +64,10 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </div>
 
                 <nav className="flex flex-col gap-2 text-sm">
-                    <NavLink to="/mymeds" className={navClass}>💊 Moje pixy</NavLink>
-                    <NavLink to="/addmed" className={navClass}>➕ Dodaj lek</NavLink>
+                    <NavLink to="/mymeds" className={navClass}>💊 Moje leki</NavLink>
+                    <NavLink to="/addmed" className={navClass}>🧪 Dodaj lek</NavLink>
                     <NavLink to="/plans" className={navClass}>🗓️ Plany</NavLink>
-                    <NavLink to="/addplan" className={navClass}>➕ Plan chlania</NavLink>
+                    <NavLink to="/addplan" className={navClass}>🩺 Plan leczenia</NavLink>
                     <NavLink to="/profile" className={navClass}>👤 Profil</NavLink>
                 </nav>
 
