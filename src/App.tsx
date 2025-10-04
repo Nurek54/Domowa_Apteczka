@@ -1,11 +1,11 @@
 // src/App.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 import { MyMeds } from "./pages/MyMeds";
 import { AddMed } from "./pages/AddMed";
 import ProtectedRoute from "./components/ProtectedRoute";
-// ⬇️ nowa strona rejestracji — pamiętaj dodać plik src/pages/Register.tsx
-import Register from "./pages/Register";
 
 export default function App() {
     return (
@@ -29,6 +29,14 @@ export default function App() {
                 element={
                     <ProtectedRoute>
                         <AddMed />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute>
+                        <Profile />
                     </ProtectedRoute>
                 }
             />
