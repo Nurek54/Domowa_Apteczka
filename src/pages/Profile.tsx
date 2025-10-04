@@ -21,7 +21,6 @@ function computeAge(isoDate: string): number {
 }
 
 export default function Profile() {
-    // --- Twój ProfilePanel wklejony 1:1 ---
     const [name, setName] = useState("");
     const [birthDate, setBirthDate] = useState<string>("");
     const [gender, setGender] = useState<Gender>("other");
@@ -121,7 +120,6 @@ export default function Profile() {
         }
     }
 
-    // --- render ---
     return (
         <DashboardLayout>
             {loading ? (
