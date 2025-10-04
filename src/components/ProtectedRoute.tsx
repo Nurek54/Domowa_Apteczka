@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from "../lib/firebase";
-import type { ReactNode } from "react";
-import type { User } from "firebase/auth";
 
 export default function ProtectedRoute({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -18,7 +16,7 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
     }, []);
 
     if (loading) return <div>Ładowanie...</div>;
-    if (!user) return <Navigate to="/login" replace />;
+    if (!user) return <Navigate to="/" replace />;
 
     return <>{children}</>;
 }

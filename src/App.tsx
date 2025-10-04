@@ -1,4 +1,3 @@
-// src/App.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import { MyMeds } from "./pages/MyMeds";
@@ -7,6 +6,11 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Plans from "./pages/Plans";
 import AddPlan from "./pages/AddPlan";
 import EditPlan from "./pages/EditPlan";
+
+// NEW
+import Profile from "./pages/Profile";
+import Family from "./pages/Family";
+import FamilyMemberMeds from "./pages/FamilyMemberMeds";
 
 export default function App() {
     return (
@@ -21,7 +25,6 @@ export default function App() {
                     </ProtectedRoute>
                 }
             />
-
             <Route
                 path="/addmed"
                 element={
@@ -30,7 +33,6 @@ export default function App() {
                     </ProtectedRoute>
                 }
             />
-
             <Route
                 path="/plans"
                 element={
@@ -39,7 +41,6 @@ export default function App() {
                     </ProtectedRoute>
                 }
             />
-
             <Route
                 path="/addplan"
                 element={
@@ -48,12 +49,37 @@ export default function App() {
                     </ProtectedRoute>
                 }
             />
-
             <Route
                 path="/editplan/:id"
                 element={
                     <ProtectedRoute>
                         <EditPlan />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* NEW */}
+            <Route
+                path="/profile"
+                element={
+                    <ProtectedRoute>
+                        <Profile />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/family"
+                element={
+                    <ProtectedRoute>
+                        <Family />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/family/:familyId/member/:uid"
+                element={
+                    <ProtectedRoute>
+                        <FamilyMemberMeds />
                     </ProtectedRoute>
                 }
             />

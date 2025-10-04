@@ -1,5 +1,4 @@
-// src/components/DashboardLayout.tsx
-import {type ReactNode, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
@@ -15,7 +14,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (u) => {
             if (!u) {
-                navigate("/login", { replace: true });
+                // ✅ u Ciebie nie ma /login – używamy "/"
+                navigate("/", { replace: true });
                 return;
             }
             setDisplayName(u.displayName || "");
@@ -27,10 +27,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
     const handleLogout = async () => {
         await signOut(auth);
-        navigate("/login", { replace: true });
+        // ✅ po wylogowaniu wracamy na "/"
+        navigate("/", { replace: true });
     };
 
     const pageTitle = useMemo(() => {
+        const p = location.pathname;
+        if (/^\/family\/[^/]+\/member\/[^/]+/.test(p)) return "Leki członka rodziny";
+        if (p.startsWith("/family")) return "Rodzina";
         const map: Record<string, string> = {
             "/mymeds": "Moje leki",
             "/addmed": "Dodaj lek",
@@ -38,7 +42,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             "/addplan": "Dodaj plan leczenia",
             "/profile": "Profil",
         };
-        const key = Object.keys(map).find((k) => location.pathname.startsWith(k));
+        const key = Object.keys(map).find((k) => p.startsWith(k));
         return (key && map[key]) || "Dashboard";
     }, [location.pathname]);
 
@@ -68,6 +72,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <NavLink to="/addmed" className={navClass}>🧪 Dodaj lek</NavLink>
                     <NavLink to="/plans" className={navClass}>🗓️ Plany</NavLink>
                     <NavLink to="/addplan" className={navClass}>🩺 Plan leczenia</NavLink>
+                    {/* ✅ nowy link – NavLink (nie <a>) */}
+                    <NavLink to="/family" className={navClass}>👨‍👩‍👧 Rodzina</NavLink>
                     <NavLink to="/profile" className={navClass}>👤 Profil</NavLink>
                 </nav>
 
@@ -86,15 +92,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
             {/* Main */}
             <div className="flex-1 flex flex-col">
-                {/* Header */}
                 <header className="flex items-center justify-between bg-white border-b p-4">
                     <h1 className="text-xl font-semibold">{pageTitle}</h1>
-                    <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded">
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                    >
                         Wyloguj
                     </button>
                 </header>
 
-                {/* Content */}
                 <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">{children}</main>
             </div>
         </div>
