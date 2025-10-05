@@ -1,8 +1,13 @@
 // src/pages/Login.tsx
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword, signInWithPopup, onAuthStateChanged } from "firebase/auth";
-import { auth, googleProvider } from "../lib/firebase";
+import {
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    onAuthStateChanged,
+} from "firebase/auth";
+import { auth, db, googleProvider } from "../lib/firebase";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -11,7 +16,7 @@ export default function Login() {
     const [busy, setBusy] = useState(false);
     const navigate = useNavigate();
 
-    // Jeśli już zalogowany → od razu do /mymeds
+    // 🔹 jeśli użytkownik jest już zalogowany → przekieruj na /mymeds
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (u) => {
             if (u) navigate("/mymeds", { replace: true });
@@ -19,6 +24,7 @@ export default function Login() {
         return () => unsub();
     }, [navigate]);
 
+    // 🔹 mapowanie błędów Firebase na PL komunikaty
     function mapAuthError(code?: string) {
         switch (code) {
             case "auth/invalid-credential":
@@ -34,13 +40,14 @@ export default function Login() {
         }
     }
 
+    // 🔹 logowanie email + hasło
     async function handleEmailLogin(e: React.FormEvent) {
         e.preventDefault();
         setError("");
         setBusy(true);
         try {
             await signInWithEmailAndPassword(auth, email.trim(), password);
-            navigate("/mymeds"); // ✅ po zalogowaniu od razu do MyMeds
+            navigate("/mymeds");
         } catch (err: any) {
             setError(mapAuthError(err?.code));
         } finally {
@@ -48,13 +55,31 @@ export default function Login() {
         }
     }
 
+    // 🔹 logowanie przez Google
     async function handleGoogleLogin() {
         setError("");
         setBusy(true);
         try {
-            await signInWithPopup(auth, googleProvider);
-            navigate("/mymeds"); // ✅ po zalogowaniu od razu do MyMeds
+            const result = await signInWithPopup(auth, googleProvider);
+            const { user } = result;
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+                // 🆕 Jeśli to pierwsze logowanie — tworzymy szkic profilu
+                await setDoc(userRef, {
+                    uid: user.uid,
+                    email: user.email || "",
+                    name: user.displayName || "",
+                    gender: "",
+                    birth_date: null,
+                    createdAt: serverTimestamp(),
+                });
+            } else {
+                navigate("/mymeds");
+            }
         } catch (err: any) {
+            console.error(err);
             setError(mapAuthError(err?.code) || "Nie udało się zalogować przez Google.");
         } finally {
             setBusy(false);
