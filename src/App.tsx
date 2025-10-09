@@ -1,12 +1,13 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register"
-import { MyMeds } from "./pages/MyMeds";
+import MyMeds from "./pages/MyMeds";
 import { AddMed } from "./pages/AddMed";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Plans from "./pages/Plans";
 import AddPlan from "./pages/AddPlan";
 import EditPlan from "./pages/EditPlan";
+import EditMed from "./pages/EditMed";
 
 // NEW
 import Profile from "./pages/Profile";
@@ -82,6 +83,15 @@ export default function App() {
                 element={
                     <ProtectedRoute>
                         <FamilyMemberMeds />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/edit-med/:id"
+                element={
+                    <ProtectedRoute>
+                        <EditMed/>
                     </ProtectedRoute>
                 }
             />

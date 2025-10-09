@@ -1,5 +1,6 @@
 // src/pages/MyMeds.tsx
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { auth, db } from "../lib/firebase";
 import {
     collection,
@@ -9,6 +10,8 @@ import {
     query,
     updateDoc,
     where,
+    deleteDoc,
+    arrayRemove,
 } from "firebase/firestore";
 import DashboardLayout from "../components/DashboardLayout";
 import {
@@ -52,7 +55,7 @@ function statusOf(ymd: string): "ok" | "soon" | "expired" {
     return "ok";
 }
 
-export function MyMeds() {
+export default function MyMeds() {
     const [meds, setMeds] = useState<Med[]>([]);
     const [userName, setUserName] = useState<string>("");
 
@@ -61,6 +64,8 @@ export function MyMeds() {
     const [categoryFilter, setCategoryFilter] = useState<string>("all");
     const [sortBy, setSortBy] = useState<SortKey>("date");
     const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -184,6 +189,38 @@ export function MyMeds() {
         );
     };
 
+    // Usuń lek: z `medicines` i odlinkuj z `medicines_sets` bieżącego usera
+    const deleteMed = async (id: string) => {
+        const user = auth.currentUser;
+        if (!user) return;
+        if (!confirm("Czy na pewno chcesz usunąć ten lek?")) return;
+
+        // 1) usuń dokument leku
+        await deleteDoc(doc(db, "medicines", id));
+
+        // 2) zaktualizuj medicines_sets (usuń referencję)
+        const qSet = query(
+            collection(db, "medicines_sets"),
+            where("owner", "==", user.uid)
+        );
+        const snap = await getDocs(qSet);
+        if (!snap.empty) {
+            const setRef = snap.docs[0].ref;
+            try {
+                // jeżeli pole jest tablicą
+                await updateDoc(setRef, { medicines_id: arrayRemove(id) });
+            } catch {
+                // fallback (gdyby nie było arrayRemove)
+                const data = snap.docs[0].data() as any;
+                const next = (data.medicines_id || []).filter((x: string) => x !== id);
+                await updateDoc(setRef, { medicines_id: next });
+            }
+        }
+
+        // 3) lokalny stan
+        setMeds((prev) => prev.filter((m) => m.id !== id));
+    };
+
     // UI plakietki statusu
     const StatusPill = ({ date }: { date: string }) => {
         const d = daysUntil(date);
@@ -211,12 +248,12 @@ export function MyMeds() {
 
     return (
         <DashboardLayout>
-            {/* Powitanie */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-semibold text-gray-800">
-                    👋 Hello, {userName}
-                </h1>
-                <p className="text-gray-500">Oto Twoja domowa apteczka</p>
+            {/* Nagłówek + CTA */}
+            <div className="mb-6 flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-semibold text-gray-800">👋 Hello, {userName}</h1>
+                    <p className="text-gray-500">Oto Twoja domowa apteczka</p>
+                </div>
             </div>
 
             {/* Kafelki statusów */}
@@ -331,9 +368,7 @@ export function MyMeds() {
                             className="bg-white shadow rounded-lg p-4 flex flex-col gap-2 border border-gray-100 hover:shadow-md transition"
                         >
                             <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-lg text-indigo-700">
-                                    {med.name}
-                                </h3>
+                                <h3 className="font-semibold text-lg text-indigo-700">{med.name}</h3>
                                 <StatusPill date={med.date} />
                             </div>
 
@@ -345,8 +380,11 @@ export function MyMeds() {
                                 Kategoria: {formatCategoryForDisplay(med.category)}
                             </p>
                             <p className="text-sm text-gray-600">Data ważności: {med.date}</p>
+                            {med.notes && (
+                                <p className="text-sm text-gray-500 border-t pt-2">Uwagi: {med.notes}</p>
+                            )}
 
-                            <div className="flex gap-2 mt-3">
+                            <div className="flex flex-wrap gap-2 mt-3">
                                 <button
                                     onClick={() => changeQty(med.id, -1)}
                                     className="px-3 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200"
@@ -358,6 +396,19 @@ export function MyMeds() {
                                     className="px-3 py-1 bg-green-100 text-green-600 rounded hover:bg-green-200"
                                 >
                                     +
+                                </button>
+
+                                <button
+                                    onClick={() => navigate(`/edit-med/${med.id}`)}
+                                    className="ml-auto px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                                >
+                                    Edytuj
+                                </button>
+                                <button
+                                    onClick={() => deleteMed(med.id)}
+                                    className="px-3 py-1 bg-rose-100 text-rose-700 rounded hover:bg-rose-200"
+                                >
+                                    Usuń
                                 </button>
                             </div>
                         </div>
