@@ -314,13 +314,6 @@ export default defineConfig([
 
 ---
 
-## 📸 Zrzuty ekranu / Screenshots
-
-> *Dodaj zrzuty ekranu do katalogu `/docs/screenshots/` i podlinkuj je tutaj.*
-> *Add screenshots to `/docs/screenshots/` and link them here.*
-
----
-
 ## 📄 Licencja / License
 
 Ten projekt jest udostępniony na licencji / This project is licensed under the [MIT License](LICENSE).
