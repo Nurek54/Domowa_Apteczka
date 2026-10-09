@@ -97,7 +97,11 @@ export default function Register() {
         <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 dark:from-zinc-950 via-white dark:via-zinc-900 to-slate-50 dark:to-indigo-950">
             <ThemeToggle className="absolute right-4 top-4" />
             <div className="w-full max-w-lg bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-8">
-                <h1 className="text-2xl font-bold mb-6 text-center">Rejestracja</h1>
+                <div className="mb-6 flex flex-col items-center gap-2">
+                    <img src="/logo.svg" alt="" className="h-14 w-14" />
+                    <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Domowa Apteczka</p>
+                    <h1 className="text-2xl font-bold">Rejestracja</h1>
+                </div>
 
                 <form onSubmit={handleRegister} className="space-y-4">
                     {/* 1) Imię i nazwisko */}

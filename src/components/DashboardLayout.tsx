@@ -66,8 +66,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="flex h-screen">
             {/* Sidebar */}
             <aside className="w-64 bg-white dark:bg-zinc-900 border-r dark:border-zinc-800 p-6 flex flex-col gap-5">
-                <div>
-                    <h2 className="text-lg font-bold">Domowa Apteczka</h2>
+                <div className="flex items-center gap-2.5">
+                    <img src="/logo.svg" alt="" className="h-8 w-8 shrink-0" />
+                    <h2 className="whitespace-nowrap text-base font-bold">Domowa Apteczka</h2>
                 </div>
 
                 <nav className="flex flex-col gap-2 text-sm">

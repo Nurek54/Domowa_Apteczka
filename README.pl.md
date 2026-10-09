@@ -156,7 +156,7 @@ Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę
 ## Zrzuty ekranu
 
 <p align="center">
-  <img src="docs/hero.png" alt="Panel leków w motywie jasnym i ciemnym, podzielony po skosie" width="100%" />
+  <img src="docs/hero.png" alt="Panel leków w motywie jasnym (z tyłu) i ciemnym (z przodu)" width="100%" />
 </p>
 
 <table>
@@ -475,6 +475,7 @@ Leki leżą we własnej kolekcji, a apteczka użytkownika to lista ID w `medicin
 Domowa_Apteczka/
 ├── docs/                      # grafiki do README: animowane SVG, demo.gif, hero.png, screenshots/, icons/
 ├── public/
+│   ├── logo.svg                   # logo aplikacji i favicon
 │   └── firebase-messaging-sw.js
 ├── src/
 │   ├── components/

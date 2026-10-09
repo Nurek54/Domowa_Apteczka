@@ -156,7 +156,7 @@ Medicine cabinets are usually shared, so the app has **families**: create a grou
 ## Screenshots
 
 <p align="center">
-  <img src="docs/hero.png" alt="The medicine dashboard in the light and the dark theme, split diagonally" width="100%" />
+  <img src="docs/hero.png" alt="The medicine dashboard in the light theme (back) and the dark theme (front)" width="100%" />
 </p>
 
 <table>
@@ -475,6 +475,7 @@ Medicines live in their own collection and a user's cabinet is a list of ids in 
 Domowa_Apteczka/
 ├── docs/                      # README assets: animated SVGs, demo.gif, hero.png, screenshots/, icons/
 ├── public/
+│   ├── logo.svg                   # app logo and favicon
 │   └── firebase-messaging-sw.js
 ├── src/
 │   ├── components/
