@@ -2,9 +2,40 @@
 /* Tailwind v4: wskaż pliki ze źródłami klas */
 @source "../index.html" "./**/*.{ts,tsx}";
 
-/* Pozwól przeglądarce dobrać natywną kolorystykę formularzy/scrolli */
-:root { color-scheme: light dark; }
+/* Tryb ciemny sterowany klasą .dark na <html> (przełącznik w UI, domyślnie motyw systemu) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Natywne kontrolki (select, date picker, scrollbar) w kolorach aktywnego motywu */
+:root { color-scheme: light; }
 .dark { color-scheme: dark; }
+
+@layer base {
+    /* Tailwind 4 domyślnie rysuje obramowania w currentColor (czarne linie);
+       przywracamy stonowany kolor jak w Tailwind 3, osobno dla każdego motywu. */
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-300, currentColor);
+    }
+    .dark *,
+    .dark ::after,
+    .dark ::before {
+        border-color: var(--color-zinc-700, currentColor);
+    }
+    body {
+        @apply bg-gray-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100;
+    }
+    input::placeholder,
+    textarea::placeholder {
+        @apply text-zinc-400 dark:text-zinc-500;
+    }
+    option,
+    optgroup {
+        @apply bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100;
+    }
+}
 
 @layer components {
     /* ───────────────── Buttons ───────────────── */

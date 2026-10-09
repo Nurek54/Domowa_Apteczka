@@ -2,6 +2,7 @@ import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
+import ThemeToggle from "./ThemeToggle";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
     const [displayName, setDisplayName] = useState<string>("");
@@ -48,12 +49,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
     const navClass = ({ isActive }: { isActive: boolean }) =>
         `px-3 py-2 rounded-lg transition-colors ${
-            isActive ? "bg-indigo-50 text-indigo-700" : "text-gray-700 hover:text-indigo-600"
+            isActive
+                ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300"
+                : "text-gray-700 hover:text-indigo-600 dark:text-zinc-300 dark:hover:text-indigo-400"
         }`;
 
     if (!authChecked) {
         return (
-            <div className="grid place-items-center h-screen text-gray-500">
+            <div className="grid place-items-center h-screen text-gray-500 dark:text-zinc-400">
                 Ładowanie…
             </div>
         );
@@ -62,7 +65,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <aside className="w-64 bg-white border-r p-6 flex flex-col gap-5">
+            <aside className="w-64 bg-white dark:bg-zinc-900 border-r dark:border-zinc-800 p-6 flex flex-col gap-5">
                 <div>
                     <h2 className="text-lg font-bold">Domowa Apteczka</h2>
                 </div>
@@ -77,14 +80,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                     <NavLink to="/profile" className={navClass}>👤 Profil</NavLink>
                 </nav>
 
-                <div className="mt-auto rounded-xl bg-gray-50 p-3">
+                <div className="mt-auto rounded-xl bg-gray-50 dark:bg-zinc-800/60 p-3">
                     <div className="flex items-center gap-3">
                         <div className="h-9 w-9 flex items-center justify-center rounded-full bg-indigo-600 text-white font-semibold">
                             {(displayName || email || "?").charAt(0).toUpperCase()}
                         </div>
                         <div className="min-w-0">
                             <p className="text-sm font-medium truncate">{displayName || "Użytkownik"}</p>
-                            <p className="text-xs text-gray-500 truncate">{email}</p>
+                            <p className="text-xs text-gray-500 dark:text-zinc-400 truncate">{email}</p>
                         </div>
                     </div>
                 </div>
@@ -92,17 +95,20 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
             {/* Main */}
             <div className="flex-1 flex flex-col">
-                <header className="flex items-center justify-between bg-white border-b p-4">
+                <header className="flex items-center justify-between bg-white dark:bg-zinc-900 border-b dark:border-zinc-800 p-4">
                     <h1 className="text-xl font-semibold">{pageTitle}</h1>
-                    <button
-                        onClick={handleLogout}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
-                    >
-                        Wyloguj
-                    </button>
+                    <div className="flex items-center gap-3">
+                        <ThemeToggle />
+                        <button
+                            onClick={handleLogout}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                        >
+                            Wyloguj
+                        </button>
+                    </div>
                 </header>
 
-                <main className="p-6 bg-gray-50 flex-1 overflow-y-auto">{children}</main>
+                <main className="p-6 bg-gray-50 dark:bg-zinc-950 flex-1 overflow-y-auto">{children}</main>
             </div>
         </div>
     );

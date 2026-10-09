@@ -232,7 +232,7 @@ export default function Family() {
             <div className="max-w-4xl mx-auto space-y-6">
                 <div>
                     <h1 className="text-2xl font-semibold">👨‍👩‍👧 Rodzina</h1>
-                    <p className="text-sm text-zinc-500">Zarządzaj rodzinami, rolami i członkami.</p>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">Zarządzaj rodzinami, rolami i członkami.</p>
                 </div>
 
                 {/* Tworzenie / Dołączanie */}
@@ -241,7 +241,7 @@ export default function Family() {
                         <h3 className="font-medium mb-2">➕ Utwórz rodzinę</h3>
                         <div className="flex gap-2">
                             <input
-                                className="flex-1 rounded-lg border px-3 py-2"
+                                className="flex-1 rounded-lg border dark:border-zinc-700 px-3 py-2"
                                 placeholder="Nazwa rodziny"
                                 value={newName}
                                 onChange={(e) => setNewName(e.target.value)}
@@ -253,7 +253,7 @@ export default function Family() {
                         <h3 className="font-medium mb-2">🔗 Dołącz kodem</h3>
                         <div className="flex gap-2">
                             <input
-                                className="flex-1 rounded-lg border px-3 py-2 uppercase"
+                                className="flex-1 rounded-lg border dark:border-zinc-700 px-3 py-2 uppercase"
                                 placeholder="KOD"
                                 value={joinCode}
                                 onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
@@ -264,9 +264,9 @@ export default function Family() {
                 </div>
 
                 {loading ? (
-                    <p className="text-zinc-500">Ładowanie…</p>
+                    <p className="text-zinc-500 dark:text-zinc-400">Ładowanie…</p>
                 ) : families.length === 0 ? (
-                    <p className="text-zinc-500">Nie należysz jeszcze do żadnej rodziny.</p>
+                    <p className="text-zinc-500 dark:text-zinc-400">Nie należysz jeszcze do żadnej rodziny.</p>
                 ) : (
                     <div className="space-y-6">
                         {families.map((fam) => (
@@ -305,12 +305,12 @@ export default function Family() {
                                         <div key={m.uid} className="py-3 flex items-center justify-between">
                                             <div>
                                                 <div className="font-medium">{m.name}</div>
-                                                <div className="text-xs text-zinc-500">{m.email}</div>
+                                                <div className="text-xs text-zinc-500 dark:text-zinc-400">{m.email}</div>
                                             </div>
 
                                             <div className="flex items-center gap-2">
                                                 <select
-                                                    className="rounded-lg border px-2 py-1 text-sm"
+                                                    className="rounded-lg border dark:border-zinc-700 px-2 py-1 text-sm"
                                                     value={m.role}
                                                     onChange={(e) => setRole(fam.id, m.uid, e.target.value as Role)}
                                                     disabled={!canManage(fam) || m.uid === fam.members.find(x=>x.role==="owner")?.uid}
@@ -340,7 +340,7 @@ export default function Family() {
                                 {canManage(fam) && (
                                     <div className="mt-4 flex items-center gap-2">
                                         <input
-                                            className="flex-1 rounded-lg border px-3 py-2"
+                                            className="flex-1 rounded-lg border dark:border-zinc-700 px-3 py-2"
                                             placeholder="E-mail użytkownika"
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") {

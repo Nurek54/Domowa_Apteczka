@@ -6,6 +6,7 @@ import {
     signInWithPopup,
     onAuthStateChanged,
 } from "firebase/auth";
+import ThemeToggle from "../components/ThemeToggle";
 import { auth, db, googleProvider } from "../lib/firebase";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
@@ -87,15 +88,16 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-slate-50">
-            <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8">
+        <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 dark:from-zinc-950 via-white dark:via-zinc-900 to-slate-50 dark:to-indigo-950">
+            <ThemeToggle className="absolute right-4 top-4" />
+            <div className="w-full max-w-md bg-white dark:bg-zinc-900 shadow-lg rounded-xl p-8">
                 <h1 className="text-2xl font-bold mb-6 text-center">Zaloguj się</h1>
 
                 <form onSubmit={handleEmailLogin} className="space-y-4">
                     <input
                         type="email"
                         placeholder="Email"
-                        className="w-full border p-2 rounded"
+                        className="w-full border dark:border-zinc-700 p-2 rounded"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         autoComplete="email"
@@ -104,7 +106,7 @@ export default function Login() {
                     <input
                         type="password"
                         placeholder="Hasło"
-                        className="w-full border p-2 rounded"
+                        className="w-full border dark:border-zinc-700 p-2 rounded"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         autoComplete="current-password"
@@ -112,7 +114,7 @@ export default function Login() {
                         required
                     />
 
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    {error && <p className="text-red-500 dark:text-red-400 text-sm">{error}</p>}
 
                     <button
                         type="submit"
@@ -123,20 +125,20 @@ export default function Login() {
                     </button>
                 </form>
 
-                <div className="my-4 text-center text-sm text-gray-500">lub</div>
+                <div className="my-4 text-center text-sm text-gray-500 dark:text-zinc-400">lub</div>
 
                 <button
                     onClick={handleGoogleLogin}
                     disabled={busy}
-                    className="w-full border py-2 rounded hover:bg-gray-100 disabled:opacity-60"
+                    className="w-full border dark:border-zinc-700 py-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-60"
                 >
                     Zaloguj przez Google
                 </button>
 
                 {/* Link do rejestracji */}
-                <p className="text-sm text-gray-500 mt-4 text-center">
+                <p className="text-sm text-gray-500 dark:text-zinc-400 mt-4 text-center">
                     Nie masz konta?{" "}
-                    <Link to="/register" className="text-indigo-600 hover:underline">
+                    <Link to="/register" className="text-indigo-600 dark:text-indigo-400 hover:underline">
                         Zarejestruj się
                     </Link>
                 </p>

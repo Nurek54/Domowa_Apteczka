@@ -127,7 +127,7 @@ export default function Plans() {
                 <div className="mb-6 flex items-center justify-between">
                     <div>
                         <h2 className="text-xl font-bold">Kalendarz planów</h2>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-zinc-400">
                             Widok miesiąca: {format(month, "LLLL yyyy")}
                         </p>
                     </div>
@@ -140,37 +140,39 @@ export default function Plans() {
                 </div>
 
                 {/* nagłówki dni */}
-                <div className="grid grid-cols-7 text-xs font-medium text-gray-500 mb-2 px-1">
+                <div className="grid grid-cols-7 text-xs font-medium text-gray-500 dark:text-zinc-400 mb-2 px-1">
                     {["Pon","Wto","Śro","Czw","Pią","Sob","Ndz"].map((d) => (
                         <div key={d} className="px-2 py-1">{d}</div>
                     ))}
                 </div>
 
                 {/* kalendarz */}
-                <div className="grid grid-cols-7 gap-px bg-gray-200 rounded-lg overflow-hidden">
+                <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-zinc-800 rounded-lg overflow-hidden">
                     {cells.map((d) => {
                         const dayKey = format(d, "yyyy-MM-dd");
                         const items = occByDay.get(dayKey) || [];
                         return (
                             <div key={dayKey}
-                                 className={`min-h-[110px] bg-white p-2 flex flex-col ${
-                                     !isSameMonth(d, month) ? "bg-gray-50 text-gray-400" : ""}`}>
+                                 className={`min-h-[110px] p-2 flex flex-col ${
+                                     !isSameMonth(d, month)
+                                         ? "bg-gray-50 dark:bg-zinc-950 text-gray-400 dark:text-zinc-500"
+                                         : "bg-white dark:bg-zinc-900"}`}>
                                 <div className="text-sm mb-1 flex items-center justify-between">
-                  <span className={`font-medium ${isSameDay(d, new Date()) ? "text-indigo-600" : ""}`}>
+                  <span className={`font-medium ${isSameDay(d, new Date()) ? "text-indigo-600 dark:text-indigo-400" : ""}`}>
                     {format(d, "d")}
                   </span>
                                     {isSameDay(d, new Date()) && (
-                                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700">dziś</span>
+                                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300">dziś</span>
                                     )}
                                 </div>
                                 <div className="space-y-1 overflow-auto">
                                     {items.length === 0 ? (
-                                        <div className="text-xs text-gray-300">—</div>
+                                        <div className="text-xs text-gray-300 dark:text-zinc-600">—</div>
                                     ) : items.map((ev, i) => (
                                         <Link
                                             key={i}
                                             to={`/editplan/${ev.planId}`}
-                                            className="block text-[11px] leading-snug px-2 py-1 rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                                            className="block text-[11px] leading-snug px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/25"
                                             title="Edytuj plan"
                                         >
                                             {ev.text}
@@ -186,7 +188,7 @@ export default function Plans() {
                 <div className="mt-8">
                     <h3 className="font-semibold mb-2">Twoje plany</h3>
                     {plans.length === 0 ? (
-                        <p className="text-sm text-gray-500">Brak planów. Dodaj pierwszy.</p>
+                        <p className="text-sm text-gray-500 dark:text-zinc-400">Brak planów. Dodaj pierwszy.</p>
                     ) : (
                         <ul className="text-sm list-disc pl-5 space-y-1">
                             {plans.map(p => (
@@ -195,7 +197,7 @@ export default function Plans() {
                                     – {medNameById(p.medicine_id)} • dni: {p.frequency.join(", ")} • godz.: {p.hours.join(", ")} •
                                     {` `}od {p.start_date}{p.end_date ? ` do ${p.end_date}` : " (bez końca)"}
                                     {"  "}
-                                    <Link to={`/editplan/${p.id}`} className="ml-2 underline text-indigo-700">Edytuj</Link>
+                                    <Link to={`/editplan/${p.id}`} className="ml-2 underline text-indigo-700 dark:text-indigo-300">Edytuj</Link>
                                 </li>
                             ))}
                         </ul>

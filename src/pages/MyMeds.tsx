@@ -227,20 +227,20 @@ export default function MyMeds() {
         const s = statusOf(date);
         if (s === "expired") {
             return (
-                <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-rose-100 text-rose-700 ring-rose-200">
+                <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-rose-100 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300 ring-rose-200 dark:ring-rose-500/30">
           Po terminie • {Math.abs(d)} dni
         </span>
             );
         }
         if (s === "soon") {
             return (
-                <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-amber-100 text-amber-800 ring-amber-200">
+                <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 ring-amber-200 dark:ring-amber-500/30">
           &lt; 30 dni • za {d} dni
         </span>
             );
         }
         return (
-            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-emerald-100 text-emerald-700 ring-emerald-200">
+            <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-emerald-100 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-200 dark:ring-emerald-500/30">
         W terminie • za {d} dni
       </span>
         );
@@ -251,8 +251,8 @@ export default function MyMeds() {
             {/* Nagłówek + CTA */}
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-800">👋 Hello, {userName}</h1>
-                    <p className="text-gray-500">Oto Twoja domowa apteczka</p>
+                    <h1 className="text-2xl font-semibold text-gray-800 dark:text-zinc-100">👋 Hello, {userName}</h1>
+                    <p className="text-gray-500 dark:text-zinc-400">Oto Twoja domowa apteczka</p>
                 </div>
             </div>
 
@@ -260,34 +260,34 @@ export default function MyMeds() {
             <div className="grid gap-4 md:grid-cols-3 mb-6">
                 <button
                     onClick={() => setStatusFilter("ok")}
-                    className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left"
+                    className="rounded-2xl p-4 ring-1 ring-zinc-200 dark:ring-zinc-800 bg-white/60 dark:bg-zinc-900/40 text-left"
                 >
-                    <div className="text-sm text-gray-500 mb-1">W terminie</div>
+                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">W terminie</div>
                     <div className="text-3xl font-semibold">{okCount}</div>
                 </button>
                 <button
                     onClick={() => setStatusFilter("soon")}
-                    className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left"
+                    className="rounded-2xl p-4 ring-1 ring-zinc-200 dark:ring-zinc-800 bg-white/60 dark:bg-zinc-900/40 text-left"
                 >
-                    <div className="text-sm text-gray-500 mb-1">&lt; 30 dni do terminu</div>
+                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">&lt; 30 dni do terminu</div>
                     <div className="text-3xl font-semibold">{soonCount}</div>
                 </button>
                 <button
                     onClick={() => setStatusFilter("expired")}
-                    className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 text-left"
+                    className="rounded-2xl p-4 ring-1 ring-zinc-200 dark:ring-zinc-800 bg-white/60 dark:bg-zinc-900/40 text-left"
                 >
-                    <div className="text-sm text-gray-500 mb-1">Po terminie</div>
+                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">Po terminie</div>
                     <div className="text-3xl font-semibold">{expiredCount}</div>
                 </button>
             </div>
 
             {/* Pasek filtrów / sortowania */}
-            <div className="rounded-2xl p-4 ring-1 ring-zinc-200 bg-white/60 dark:bg-zinc-900/40 mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div className="rounded-2xl p-4 ring-1 ring-zinc-200 dark:ring-zinc-800 bg-white/60 dark:bg-zinc-900/40 mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div className="flex flex-wrap gap-3">
                     <div className="flex flex-col">
-                        <label className="text-xs text-gray-500 mb-1">Status</label>
+                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Status</label>
                         <select
-                            className="border rounded px-3 py-2"
+                            className="border dark:border-zinc-700 rounded px-3 py-2"
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
                         >
@@ -299,9 +299,9 @@ export default function MyMeds() {
                     </div>
 
                     <div className="flex flex-col">
-                        <label className="text-xs text-gray-500 mb-1">Kategoria</label>
+                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Kategoria</label>
                         <select
-                            className="border rounded px-3 py-2"
+                            className="border dark:border-zinc-700 rounded px-3 py-2"
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
                         >
@@ -328,9 +328,9 @@ export default function MyMeds() {
 
                 <div className="flex flex-wrap gap-3">
                     <div className="flex flex-col">
-                        <label className="text-xs text-gray-500 mb-1">Sortuj wg</label>
+                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Sortuj wg</label>
                         <select
-                            className="border rounded px-3 py-2"
+                            className="border dark:border-zinc-700 rounded px-3 py-2"
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value as SortKey)}
                         >
@@ -342,9 +342,9 @@ export default function MyMeds() {
                     </div>
 
                     <div className="flex flex-col">
-                        <label className="text-xs text-gray-500 mb-1">Kierunek</label>
+                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Kierunek</label>
                         <select
-                            className="border rounded px-3 py-2"
+                            className="border dark:border-zinc-700 rounded px-3 py-2"
                             value={sortOrder}
                             onChange={(e) => setSortOrder(e.target.value as SortOrder)}
                         >
@@ -359,54 +359,54 @@ export default function MyMeds() {
             <h2 className="text-xl font-bold mb-4">Moje leki</h2>
 
             {visibleMeds.length === 0 ? (
-                <p className="text-gray-500">Brak leków spełniających filtry.</p>
+                <p className="text-gray-500 dark:text-zinc-400">Brak leków spełniających filtry.</p>
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {visibleMeds.map((med) => (
                         <div
                             key={med.id}
-                            className="bg-white shadow rounded-lg p-4 flex flex-col gap-2 border border-gray-100 hover:shadow-md transition"
+                            className="bg-white dark:bg-zinc-900 shadow rounded-lg p-4 flex flex-col gap-2 border dark:border-zinc-700 border-gray-100 hover:shadow-md transition"
                         >
                             <div className="flex items-center justify-between">
-                                <h3 className="font-semibold text-lg text-indigo-700">{med.name}</h3>
+                                <h3 className="font-semibold text-lg text-indigo-700 dark:text-indigo-300">{med.name}</h3>
                                 <StatusPill date={med.date} />
                             </div>
 
-                            <p className="text-sm text-gray-600">Dawka: {med.dose}</p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-zinc-400">Dawka: {med.dose}</p>
+                            <p className="text-sm text-gray-600 dark:text-zinc-400">
                                 Ilość: {med.quantity} {med.unit}
                             </p>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-zinc-400">
                                 Kategoria: {formatCategoryForDisplay(med.category)}
                             </p>
-                            <p className="text-sm text-gray-600">Data ważności: {med.date}</p>
+                            <p className="text-sm text-gray-600 dark:text-zinc-400">Data ważności: {med.date}</p>
                             {med.notes && (
-                                <p className="text-sm text-gray-500 border-t pt-2">Uwagi: {med.notes}</p>
+                                <p className="text-sm text-gray-500 dark:text-zinc-400 border-t dark:border-zinc-700 pt-2">Uwagi: {med.notes}</p>
                             )}
 
                             <div className="flex flex-wrap gap-2 mt-3">
                                 <button
                                     onClick={() => changeQty(med.id, -1)}
-                                    className="px-3 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200"
+                                    className="px-3 py-1 bg-red-100 dark:bg-red-500/15 text-red-600 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-500/25"
                                 >
                                     -
                                 </button>
                                 <button
                                     onClick={() => changeQty(med.id, 1)}
-                                    className="px-3 py-1 bg-green-100 text-green-600 rounded hover:bg-green-200"
+                                    className="px-3 py-1 bg-green-100 dark:bg-green-500/15 text-green-600 dark:text-green-300 rounded hover:bg-green-200 dark:hover:bg-green-500/25"
                                 >
                                     +
                                 </button>
 
                                 <button
                                     onClick={() => navigate(`/edit-med/${med.id}`)}
-                                    className="ml-auto px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200"
+                                    className="ml-auto px-3 py-1 bg-blue-100 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-500/25"
                                 >
                                     Edytuj
                                 </button>
                                 <button
                                     onClick={() => deleteMed(med.id)}
-                                    className="px-3 py-1 bg-rose-100 text-rose-700 rounded hover:bg-rose-200"
+                                    className="px-3 py-1 bg-rose-100 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300 rounded hover:bg-rose-200 dark:hover:bg-rose-500/25"
                                 >
                                     Usuń
                                 </button>

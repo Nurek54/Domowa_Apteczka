@@ -35,7 +35,7 @@
 
 **Domowa Apteczka** to aplikacja webowa (SPA), która pomaga zapanować nad lekami w domu. Dodajesz to, co masz, z dawką, ilością, kategorią i datą ważności, a panel od razu pokazuje, co jest **w terminie**, co **traci ważność w ciągu 30 dni** i co jest **już po terminie**. Zalecenie lekarza zamieniasz w **plan leczenia** (dni tygodnia, godziny, data startu i opcjonalnie końca) i widzisz każdą dawkę w kalendarzu miesięcznym.
 
-Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę, zapraszasz bliskich krótkim kodem albo po e-mailu, nadajesz role (**owner**, **admin**, **member**, **viewer**) i możecie zaglądać sobie nawzajem do leków. Wszystko działa w przeglądarce na **Firebase Authentication** (e-mail + Google) i **Cloud Firestore**; nie ma własnego backendu do utrzymywania.
+Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę, zapraszasz bliskich krótkim kodem albo po e-mailu, nadajesz role (**owner**, **admin**, **member**, **viewer**) i możecie zaglądać sobie nawzajem do leków. Interfejs ma **motyw jasny i ciemny**, który do czasu Twojego wyboru podąża za ustawieniem systemu. Wszystko działa w przeglądarce na **Firebase Authentication** (e-mail + Google) i **Cloud Firestore**; nie ma własnego backendu do utrzymywania.
 
 <p align="center"><b>Słowa kluczowe</b></p>
 
@@ -67,6 +67,7 @@ Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę
       <img src="https://img.shields.io/badge/Modelowanie%20NoSQL-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMi45NyAxMi45MkEyIDIgMCAwIDAgMiAxNC42M3YzLjI0YTIgMiAwIDAgMCAuOTcgMS43MWwzIDEuOGEyIDIgMCAwIDAgMi4wNiAwTDEyIDE5di01LjVsLTUtMy00LjAzIDIuNDJaIiAvPiA8cGF0aCBkPSJtNyAxNi41LTQuNzQtMi44NSIgLz4gPHBhdGggZD0ibTcgMTYuNSA1LTMiIC8%2BIDxwYXRoIGQ9Ik03IDE2LjV2NS4xNyIgLz4gPHBhdGggZD0iTTEyIDEzLjVWMTlsMy45NyAyLjM4YTIgMiAwIDAgMCAyLjA2IDBsMy0xLjhhMiAyIDAgMCAwIC45Ny0xLjcxdi0zLjI0YTIgMiAwIDAgMC0uOTctMS43MUwxNyAxMC41bC01IDNaIiAvPiA8cGF0aCBkPSJtMTcgMTYuNS01LTMiIC8%2BIDxwYXRoIGQ9Im0xNyAxNi41IDQuNzQtMi44NSIgLz4gPHBhdGggZD0iTTE3IDE2LjV2NS4xNyIgLz4gPHBhdGggZD0iTTcuOTcgNC40MkEyIDIgMCAwIDAgNyA2LjEzdjQuMzdsNSAzIDUtM1Y2LjEzYTIgMiAwIDAgMC0uOTctMS43MWwtMy0xLjhhMiAyIDAgMCAwLTIuMDYgMGwtMyAxLjhaIiAvPiA8cGF0aCBkPSJNMTIgOCA3LjI2IDUuMTUiIC8%2BIDxwYXRoIGQ9Im0xMiA4IDQuNzQtMi44NSIgLz4gPHBhdGggZD0iTTEyIDEzLjVWOCIgLz4gPC9zdmc%2B" alt="Modelowanie NoSQL" />
       <img src="https://img.shields.io/badge/Role%20i%20uprawnienia-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjAgMTNjMCA1LTMuNSA3LjUtNy42NiA4Ljk1YTEgMSAwIDAgMS0uNjctLjAxQzcuNSAyMC41IDQgMTggNCAxM1Y2YTEgMSAwIDAgMSAxLTFjMiAwIDQuNS0xLjIgNi4yNC0yLjcyYTEuMTcgMS4xNyAwIDAgMSAxLjUyIDBDMTQuNTEgMy44MSAxNyA1IDE5IDVhMSAxIDAgMCAxIDEgMXoiIC8%2BIDxwYXRoIGQ9Im05IDEyIDIgMiA0LTQiIC8%2BIDwvc3ZnPg%3D%3D" alt="Role i uprawnienia" />
       <img src="https://img.shields.io/badge/CRUD-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjEuMTc0IDYuODEyYTEgMSAwIDAgMC0zLjk4Ni0zLjk4N0wzLjg0MiAxNi4xNzRhMiAyIDAgMCAwLS41LjgzbC0xLjMyMSA0LjM1MmEuNS41IDAgMCAwIC42MjMuNjIybDQuMzUzLTEuMzJhMiAyIDAgMCAwIC44My0uNDk3eiIgLz4gPHBhdGggZD0ibTE1IDUgNCA0IiAvPiA8L3N2Zz4%3D" alt="CRUD" />
+      <img src="https://img.shields.io/badge/Tryb%20ciemny-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMTIgM2E2IDYgMCAwIDAgOSA5IDkgOSAwIDEgMS05LTlaIiAvPiA8L3N2Zz4%3D" alt="Tryb ciemny" />
       <img src="https://img.shields.io/badge/Harmonogramy-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjEgNy41VjZhMiAyIDAgMCAwLTItMkg1YTIgMiAwIDAgMC0yIDJ2MTRhMiAyIDAgMCAwIDIgMmgzLjUiIC8%2BIDxwYXRoIGQ9Ik0xNiAydjQiIC8%2BIDxwYXRoIGQ9Ik04IDJ2NCIgLz4gPHBhdGggZD0iTTMgMTBoNSIgLz4gPHBhdGggZD0iTTE3LjUgMTcuNSAxNiAxNi4zVjE0IiAvPiA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI2IiAvPiA8L3N2Zz4%3D" alt="Harmonogramy" />
     </td>
   </tr>
@@ -94,7 +95,7 @@ Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę
   <img src="docs/demo.gif" alt="Demo: logowanie, filtrowanie leków po statusie ważności, zmiana ilości, dodanie leku, kalendarz planów, zmiana roli członka rodziny i podgląd jego leków" width="100%" />
 </p>
 
-<p align="center"><sub>Logowanie → kafelki ważności jako filtry → ilość +/− → nowy lek → kalendarz planów → role w rodzinie → leki członka rodziny.</sub></p>
+<p align="center"><sub>Logowanie → kafelki ważności jako filtry → ilość +/− → tryb ciemny → nowy lek → kalendarz planów → powrót do jasnego → role w rodzinie → leki członka rodziny.</sub></p>
 
 ## Najważniejsze funkcje
 
@@ -137,12 +138,12 @@ Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę
     <td width="33%" valign="top">
       <img src="docs/icons/log-in.svg" width="44" alt="" /><br />
       <b>E-mail lub Google</b><br />
-      <sub>Firebase Authentication: e-mail + hasło albo konto Google; chronione ścieżki odsyłają niezalogowanych na stronę logowania.</sub>
+      <sub>Firebase Authentication: e-mail + hasło albo konto Google, do tego profil (imię, data urodzenia z wyliczanym wiekiem, zmiana hasła).</sub>
     </td>
     <td width="33%" valign="top">
-      <img src="docs/icons/user-round.svg" width="44" alt="" /><br />
-      <b>Profil</b><br />
-      <sub>Edycja imienia, daty urodzenia (wiek liczy się sam) i płci oraz zmiana hasła bez wychodzenia z aplikacji.</sub>
+      <img src="docs/icons/sun-moon.svg" width="44" alt="" /><br />
+      <b>Motyw jasny i ciemny</b><br />
+      <sub>Przełącznik słońce / księżyc w nagłówku i na stronie logowania. Domyślnie motyw systemu, wybór jest zapamiętywany i nakładany przed pierwszym renderem, więc nic nie miga na biało.</sub>
     </td>
     <td width="33%" valign="top">
       <img src="docs/icons/flame.svg" width="44" alt="" /><br />
@@ -155,43 +156,92 @@ Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę
 ## Zrzuty ekranu
 
 <p align="center">
-  <img src="docs/hero.png" alt="Panel leków i kalendarz planów obok siebie" width="100%" />
+  <img src="docs/hero.png" alt="Panel leków w motywie jasnym i ciemnym, podzielony po skosie" width="100%" />
 </p>
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <img src="docs/screenshots/02-filtered.png" alt="Leki tracące ważność w ciągu 30 dni" />
+      <img src="docs/screenshots/split/02-filtered.png" alt="Leki tracące ważność w ciągu 30 dni, motyw jasny i ciemny" />
       <p align="center"><b>Co się zaraz przeterminuje?</b><br /><sub>Kliknięcie kafelka filtruje listę; plakietki pokazują, ile dni zostało.</sub></p>
     </td>
     <td width="50%" valign="top">
-      <img src="docs/screenshots/03-addmed.png" alt="Formularz dodawania leku" />
+      <img src="docs/screenshots/split/03-addmed.png" alt="Formularz dodawania leku, motyw jasny i ciemny" />
       <p align="center"><b>Dodawanie leku</b><br /><sub>Dawka, ilość i jednostka, jedna z 15 kategorii, data ważności i uwagi.</sub></p>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <img src="docs/screenshots/05-addplan.png" alt="Formularz planu leczenia" />
+      <img src="docs/screenshots/split/05-addplan.png" alt="Formularz planu leczenia, motyw jasny i ciemny" />
       <p align="center"><b>Nowy plan leczenia</b><br /><sub>Dni tygodnia, dowolna liczba godzin, start i opcjonalny koniec.</sub></p>
     </td>
     <td width="50%" valign="top">
-      <img src="docs/screenshots/06-family.png" alt="Zarządzanie rodziną" />
+      <img src="docs/screenshots/split/06-family.png" alt="Zarządzanie rodziną, motyw jasny i ciemny" />
       <p align="center"><b>Rodzina i role</b><br /><sub>Kod zaproszenia, rola każdego członka i skrót do jego leków.</sub></p>
     </td>
   </tr>
 </table>
 
 <details>
-<summary><b>Więcej ekranów</b> (kalendarz, leki członka rodziny, profil, edycja, logowanie)</summary>
+<summary><b>Więcej ekranów</b> (kalendarz, leki członka rodziny, profil, edycja, logowanie; dopasowują się do motywu GitHuba)</summary>
 <br />
 
-| Kalendarz planów | Leki członka rodziny |
-|:---:|:---:|
-| <img src="docs/screenshots/04-plans.png" alt="Kalendarz planów" /> | <img src="docs/screenshots/07-member.png" alt="Leki członka rodziny" /> |
-| **Profil i hasło** | **Edycja leku** |
-| <img src="docs/screenshots/08-profile.png" alt="Profil" /> | <img src="docs/screenshots/10-editmed.png" alt="Edycja leku" /> |
-| **Panel główny** | **Logowanie (e-mail lub Google)** |
-| <img src="docs/screenshots/01-dashboard.png" alt="Panel główny" /> | <img src="docs/screenshots/09-login.png" alt="Logowanie" /> |
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/04-plans.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/04-plans.png" />
+        <img src="docs/screenshots/04-plans.png" alt="Kalendarz planów" />
+      </picture>
+      <p align="center"><b>Kalendarz planów</b></p>
+    </td>
+    <td width="50%" valign="top">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/07-member.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/07-member.png" />
+        <img src="docs/screenshots/07-member.png" alt="Leki członka rodziny" />
+      </picture>
+      <p align="center"><b>Leki członka rodziny</b></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/08-profile.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/08-profile.png" />
+        <img src="docs/screenshots/08-profile.png" alt="Profil" />
+      </picture>
+      <p align="center"><b>Profil i hasło</b></p>
+    </td>
+    <td width="50%" valign="top">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/10-editmed.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/10-editmed.png" />
+        <img src="docs/screenshots/10-editmed.png" alt="Edycja leku" />
+      </picture>
+      <p align="center"><b>Edycja leku</b></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/01-dashboard.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/01-dashboard.png" />
+        <img src="docs/screenshots/01-dashboard.png" alt="Panel główny" />
+      </picture>
+      <p align="center"><b>Panel główny</b></p>
+    </td>
+    <td width="50%" valign="top">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/09-login.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/09-login.png" />
+        <img src="docs/screenshots/09-login.png" alt="Logowanie" />
+      </picture>
+      <p align="center"><b>Logowanie (e-mail lub Google)</b></p>
+    </td>
+  </tr>
+</table>
 
 </details>
 
@@ -223,6 +273,18 @@ const status = d < 0 ? "expired" : d <= 30 ? "soon" : "ok";
 </picture>
 
 Plan przechowuje **reguły**, a nie pojedyncze dawki: dni tygodnia (`frequency`), godziny (`hours`), `start_date` i opcjonalnie `end_date`. Kalendarz przechodzi po widocznych tygodniach (od poniedziałku, razem z dniami sąsiednich miesięcy), zostawia dni z zakresu planu o pasującym dniu tygodnia, dodaje wpis dla każdej godziny i sortuje dzień po czasie. Kliknięcie wpisu otwiera edycję planu.
+
+### Motyw jasny i ciemny
+
+Tryb ciemny jest oparty na klasie: wariant `dark:` z Tailwinda jest powiązany z klasą `.dark` na `<html>` (`@custom-variant dark` w `src/index.css`), więc przełącznik działa niezależnie od systemu. Mały skrypt w `index.html` ustawia klasę, zanim załaduje się React, dzięki czemu nie ma mignięcia jasnego motywu, a `useTheme()` w `src/lib/theme.ts` pilnuje go później.
+
+```ts
+// zapisany wybór ma pierwszeństwo, inaczej motyw systemu (i podążanie za nim, dopóki użytkownik nie wybierze)
+const theme = localStorage.getItem("theme") ?? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+document.documentElement.classList.toggle("dark", theme === "dark");
+```
+
+Natywne kontrolki (listy, wybór daty, paski przewijania) też zmieniają kolory, bo `color-scheme` podąża za aktywnym motywem.
 
 ### Rodziny i role
 
@@ -400,7 +462,7 @@ Leki leżą we własnej kolekcji, a apteczka użytkownika to lista ID w `medicin
 |---|---|
 | UI | React 19, TypeScript 5.9 |
 | Routing | React Router 7 (`BrowserRouter`, chronione ścieżki) |
-| Style | Tailwind CSS 4 (`@tailwindcss/postcss`) plus kilka klas komponentów (`btn`, `card`, plakietki statusu) |
+| Style | Tailwind CSS 4 (`@tailwindcss/postcss`), tryb ciemny oparty na klasie (`@custom-variant dark`), kilka klas komponentów (`btn`, `card`, plakietki statusu) |
 | Build | Vite 7 (`rolldown-vite`), `@vitejs/plugin-react` |
 | Daty | date-fns 4 |
 | Logowanie | Firebase Authentication (e-mail + hasło, popup Google) |
@@ -416,12 +478,14 @@ Domowa_Apteczka/
 │   └── firebase-messaging-sw.js
 ├── src/
 │   ├── components/
-│   │   ├── DashboardLayout.tsx    # sidebar, tytuł strony, wylogowanie
+│   │   ├── DashboardLayout.tsx    # sidebar, tytuł strony, przełącznik motywu, wylogowanie
+│   │   ├── ThemeToggle.tsx        # przełącznik słońce / księżyc
 │   │   └── ProtectedRoute.tsx     # przekierowuje niezalogowanych na "/"
 │   ├── constants/
 │   │   └── categories.ts          # 15 kategorii (id, etykieta PL, emoji)
 │   ├── lib/
-│   │   └── firebase.ts            # aplikacja Firebase, auth, db, provider Google
+│   │   ├── firebase.ts            # aplikacja Firebase, auth, db, provider Google
+│   │   └── theme.ts               # useTheme(): zapisany wybór albo motyw systemu
 │   ├── pages/
 │   │   ├── Login.tsx · Register.tsx
 │   │   ├── MyMeds.tsx             # panel: kafelki, filtry, sortowanie, karty
@@ -434,8 +498,8 @@ Domowa_Apteczka/
 │   ├── types.ts
 │   ├── App.tsx                    # routing
 │   ├── main.tsx
-│   └── index.css                  # Tailwind + klasy komponentów
-├── index.html
+│   └── index.css                  # Tailwind, wariant dark, klasy komponentów
+├── index.html                     # ustawia motyw przed pierwszym renderem
 ├── package.json
 ├── vite.config.ts
 ├── eslint.config.js

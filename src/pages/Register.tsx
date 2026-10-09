@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { addDoc, collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import ThemeToggle from "../components/ThemeToggle";
 import { auth, db } from "../lib/firebase";
 
 type Gender = "male" | "female" | "other";
@@ -93,8 +94,9 @@ export default function Register() {
     const todayISO = new Date().toISOString().slice(0, 10);
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-slate-50">
-            <div className="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8">
+        <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 dark:from-zinc-950 via-white dark:via-zinc-900 to-slate-50 dark:to-indigo-950">
+            <ThemeToggle className="absolute right-4 top-4" />
+            <div className="w-full max-w-lg bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-8">
                 <h1 className="text-2xl font-bold mb-6 text-center">Rejestracja</h1>
 
                 <form onSubmit={handleRegister} className="space-y-4">
@@ -102,7 +104,7 @@ export default function Register() {
                     <div>
                         <label className="block text-sm font-medium">Imię i nazwisko</label>
                         <input
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
@@ -115,14 +117,14 @@ export default function Register() {
                         <label className="block text-sm font-medium">Data urodzenia</label>
                         <input
                             type="date"
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={birthDate}
                             onChange={(e) => setBirthDate(e.target.value)}
                             max={todayISO}
                             required
                         />
                         {birthDate && (
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
                                 Wiek: <b>{computeAge(birthDate)}</b> lat
                             </p>
                         )}
@@ -134,7 +136,7 @@ export default function Register() {
                         <select
                             value={gender}
                             onChange={(e) => setGender(e.target.value as Gender)}
-                            className="w-full h-10 rounded-md border px-3 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
+                            className="w-full h-10 rounded-md border dark:border-zinc-700 px-3 bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                         >
                             <option value="male">Mężczyzna</option>
                             <option value="female">Kobieta</option>
@@ -147,7 +149,7 @@ export default function Register() {
                         <label className="block text-sm font-medium">Email</label>
                         <input
                             type="email"
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -161,7 +163,7 @@ export default function Register() {
                         <label className="block text-sm font-medium">Hasło</label>
                         <input
                             type="password"
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -170,7 +172,7 @@ export default function Register() {
                         />
                     </div>
 
-                    {error && <p className="text-red-600 text-sm">{error}</p>}
+                    {error && <p className="text-red-600 dark:text-red-300 text-sm">{error}</p>}
 
                     <button
                         type="submit"
@@ -181,9 +183,9 @@ export default function Register() {
                     </button>
                 </form>
 
-                <p className="text-sm text-gray-500 mt-4 text-center">
+                <p className="text-sm text-gray-500 dark:text-zinc-400 mt-4 text-center">
                     Masz już konto?{" "}
-                    <Link to="/login" className="text-indigo-600 hover:underline">
+                    <Link to="/login" className="text-indigo-600 dark:text-indigo-400 hover:underline">
                         Zaloguj się
                     </Link>
                 </p>

@@ -106,9 +106,9 @@ export default function FamilyMemberMeds() {
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h1 className="text-2xl font-semibold">
-                            💊 Leki: <span className="text-sky-600">{memberName}</span>
+                            💊 Leki: <span className="text-sky-600 dark:text-sky-400">{memberName}</span>
                         </h1>
-                        <p className="text-sm text-zinc-500">
+                        <p className="text-sm text-zinc-500 dark:text-zinc-400">
                             Tryb: {canEdit ? "edycja dozwolona" : "tylko podgląd"}
                         </p>
                     </div>
@@ -116,7 +116,7 @@ export default function FamilyMemberMeds() {
                 </div>
 
                 {meds.length === 0 ? (
-                    <p className="text-zinc-500">Brak leków do wyświetlenia.</p>
+                    <p className="text-zinc-500 dark:text-zinc-400">Brak leków do wyświetlenia.</p>
                 ) : (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {meds.map((med) => (
@@ -141,7 +141,7 @@ export default function FamilyMemberMeds() {
                                 <div className="flex gap-2 mt-3">
                                     <button
                                         onClick={() => changeQty(med.id, -1)}
-                                        className="px-3 py-1 rounded ring-1 ring-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 disabled:opacity-50"
+                                        className="px-3 py-1 rounded ring-1 ring-rose-200 dark:ring-rose-500/30 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-500/20 disabled:opacity-50"
                                         disabled={!canEdit}
                                         title={canEdit ? "Zmniejsz ilość" : "Brak uprawnień do edycji"}
                                     >
@@ -149,7 +149,7 @@ export default function FamilyMemberMeds() {
                                     </button>
                                     <button
                                         onClick={() => changeQty(med.id, 1)}
-                                        className="px-3 py-1 rounded ring-1 ring-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
+                                        className="px-3 py-1 rounded ring-1 ring-emerald-200 dark:ring-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 disabled:opacity-50"
                                         disabled={!canEdit}
                                         title={canEdit ? "Zwiększ ilość" : "Brak uprawnień do edycji"}
                                     >

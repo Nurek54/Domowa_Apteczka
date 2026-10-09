@@ -123,7 +123,7 @@ export default function Profile() {
     return (
         <DashboardLayout>
             {loading ? (
-                <div className="min-h-[40vh] grid place-items-center text-gray-500">Ładowanie profilu…</div>
+                <div className="min-h-[40vh] grid place-items-center text-gray-500 dark:text-zinc-400">Ładowanie profilu…</div>
             ) : (
                 <div className="max-w-5xl mx-auto">
                     <h1 className="text-2xl font-semibold mb-6">Twój profil</h1>
@@ -131,14 +131,14 @@ export default function Profile() {
                     {/* Dwa boxy obok siebie */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Box: Dane osobowe */}
-                        <section className="bg-white rounded-2xl shadow p-6">
+                        <section className="bg-white dark:bg-zinc-900 rounded-2xl shadow p-6">
                             <h2 className="text-lg font-medium mb-4">Dane osobowe</h2>
 
                             <div className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-medium">Imię i nazwisko</label>
                                     <input
-                                        className="w-full border rounded p-2"
+                                        className="w-full border dark:border-zinc-700 rounded p-2"
                                         value={name}
                                         onChange={(ev) => setName(ev.target.value)}
                                         autoComplete="name"
@@ -149,13 +149,13 @@ export default function Profile() {
                                     <label className="block text-sm font-medium">Data urodzenia</label>
                                     <input
                                         type="date"
-                                        className="w-full border rounded p-2"
+                                        className="w-full border dark:border-zinc-700 rounded p-2"
                                         value={birthDate}
                                         max={todayISO}
                                         onChange={(ev) => setBirthDate(ev.target.value)}
                                     />
                                     {birthDate && (
-                                        <p className="text-xs text-gray-500 mt-1">Wiek: <b>{age}</b> lat</p>
+                                        <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">Wiek: <b>{age}</b> lat</p>
                                     )}
                                 </div>
 
@@ -164,7 +164,7 @@ export default function Profile() {
                                     <select
                                         value={gender}
                                         onChange={(ev) => setGender(ev.target.value as Gender)}
-                                        className="w-full h-10 rounded-md border px-3 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                        className="w-full h-10 rounded-md border dark:border-zinc-700 px-3 bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     >
                                         <option value="male">Mężczyzna</option>
                                         <option value="female">Kobieta</option>
@@ -174,8 +174,8 @@ export default function Profile() {
 
                                 <div>
                                     <label className="block text-sm font-medium">Email</label>
-                                    <input className="w-full border rounded p-2 bg-gray-50" value={email} disabled />
-                                    <p className="text-xs text-gray-500 mt-1">
+                                    <input className="w-full border dark:border-zinc-700 rounded p-2 bg-gray-50 dark:bg-zinc-950" value={email} disabled />
+                                    <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
                                         Zmiana emaila zwykle wymaga ponownego logowania.
                                     </p>
                                 </div>
@@ -191,7 +191,7 @@ export default function Profile() {
                         </section>
 
                         {/* Box: Zmiana hasła */}
-                        <section className="bg-white rounded-2xl shadow p-6">
+                        <section className="bg-white dark:bg-zinc-900 rounded-2xl shadow p-6">
                             <h2 className="text-lg font-medium mb-4">Zmiana hasła</h2>
 
                             <div className="space-y-4">
@@ -199,7 +199,7 @@ export default function Profile() {
                                     <label className="block text-sm font-medium">Nowe hasło</label>
                                     <input
                                         type="password"
-                                        className="w-full border rounded p-2"
+                                        className="w-full border dark:border-zinc-700 rounded p-2"
                                         value={newPassword}
                                         onChange={(ev) => setNewPassword(ev.target.value)}
                                         autoComplete="new-password"
@@ -211,7 +211,7 @@ export default function Profile() {
                                     <label className="block text-sm font-medium">Powtórz nowe hasło</label>
                                     <input
                                         type="password"
-                                        className="w-full border rounded p-2"
+                                        className="w-full border dark:border-zinc-700 rounded p-2"
                                         value={newPassword2}
                                         onChange={(ev) => setNewPassword2(ev.target.value)}
                                         autoComplete="new-password"
@@ -231,7 +231,7 @@ export default function Profile() {
                     </div>
 
                     {msg && (
-                        <p className={`mt-6 text-sm ${msgType === "ok" ? "text-emerald-600" : "text-red-600"}`}>
+                        <p className={`mt-6 text-sm ${msgType === "ok" ? "text-emerald-600 dark:text-emerald-300" : "text-red-600 dark:text-red-300"}`}>
                             {msg}
                         </p>
                     )}

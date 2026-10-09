@@ -65,13 +65,13 @@ export function AddMed() {
 
     return (
         <DashboardLayout>
-            <div className="max-w-xl mx-auto bg-white shadow rounded-lg p-6">
+            <div className="max-w-xl mx-auto bg-white dark:bg-zinc-900 shadow rounded-lg p-6">
                 <h2 className="text-xl font-bold mb-4">Dodaj nowy lek</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium">Nazwa leku</label>
                         <input
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
@@ -81,7 +81,7 @@ export function AddMed() {
                     <div>
                         <label className="block text-sm font-medium">Dawka</label>
                         <input
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={dose}
                             onChange={(e) => setDose(e.target.value)}
                             required
@@ -93,7 +93,7 @@ export function AddMed() {
                             <label className="block text-sm font-medium">Ilość</label>
                             <input
                                 type="number"
-                                className="w-full border rounded p-2"
+                                className="w-full border dark:border-zinc-700 rounded p-2"
                                 value={quantity}
                                 onChange={(e) => setQuantity(Number(e.target.value))}
                                 required
@@ -103,7 +103,7 @@ export function AddMed() {
                         <div>
                             <label className="block text-sm font-medium">Jednostka</label>
                             <select
-                                className="w-full border rounded p-2"
+                                className="w-full border dark:border-zinc-700 rounded p-2"
                                 value={unit}
                                 onChange={(e) => setUnit(e.target.value)}
                             >
@@ -117,7 +117,7 @@ export function AddMed() {
                     <div>
                         <label className="block text-sm font-medium">Kategoria</label>
                         <select
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={category}
                             onChange={(e) => setCategory(e.target.value as MedCategory)}
                         >
@@ -127,7 +127,7 @@ export function AddMed() {
                                 </option>
                             ))}
                         </select>
-                        <p className="mt-1 text-xs text-gray-500">
+                        <p className="mt-1 text-xs text-gray-500 dark:text-zinc-400">
                             Wybierz z listy predefiniowanych kategorii.
                         </p>
                     </div>
@@ -136,7 +136,7 @@ export function AddMed() {
                         <label className="block text-sm font-medium">Data ważności</label>
                         <input
                             type="date"
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
                             required
@@ -146,7 +146,7 @@ export function AddMed() {
                     <div>
                         <label className="block text-sm font-medium">Uwagi</label>
                         <textarea
-                            className="w-full border rounded p-2"
+                            className="w-full border dark:border-zinc-700 rounded p-2"
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
                         />

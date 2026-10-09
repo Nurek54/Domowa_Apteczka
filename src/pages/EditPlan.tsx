@@ -151,12 +151,12 @@ export default function EditPlan() {
 
     return (
         <DashboardLayout>
-            <div className="max-w-2xl mx-auto bg-white shadow rounded-lg p-6">
+            <div className="max-w-2xl mx-auto bg-white dark:bg-zinc-900 shadow rounded-lg p-6">
                 <h2 className="text-xl font-bold mb-4">Edytuj plan leczenia</h2>
                 <form onSubmit={save} className="space-y-6">
                     <div>
                         <label className="block text-sm font-medium">Nazwa planu *</label>
-                        <input className="w-full border rounded p-2"
+                        <input className="w-full border dark:border-zinc-700 rounded p-2"
                                value={name}
                                onChange={(e)=>setName(e.target.value)}
                                required />
@@ -164,7 +164,7 @@ export default function EditPlan() {
 
                     <div>
                         <label className="block text-sm font-medium">Powiązany lek *</label>
-                        <select className="w-full border rounded p-2"
+                        <select className="w-full border dark:border-zinc-700 rounded p-2"
                                 value={medicineId}
                                 onChange={(e)=>setMedicineId(e.target.value)}
                                 required>
@@ -183,8 +183,8 @@ export default function EditPlan() {
                             {ALL_DAYS.map(d => (
                                 <label key={d}
                                        className={`px-3 py-2 rounded-lg ring-1 cursor-pointer select-none
-                         ${dayChecked(d) ? "ring-indigo-500 bg-indigo-50 text-indigo-700"
-                                           : "ring-gray-200 hover:bg-gray-50"}`}>
+                         ${dayChecked(d) ? "ring-indigo-500 bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300"
+                                           : "ring-gray-200 dark:ring-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800"}`}>
                                     <input type="checkbox" className="mr-2" checked={dayChecked(d)} onChange={()=>toggleDay(d)} />
                                     {d.charAt(0).toUpperCase() + d.slice(1)}
                                 </label>
@@ -199,13 +199,13 @@ export default function EditPlan() {
                                 <div key={idx} className="flex gap-2 items-center">
                                     <input
                                         type="time"
-                                        className="border rounded p-2"
+                                        className="border dark:border-zinc-700 rounded p-2"
                                         value={h}
                                         onChange={(e)=>updateHour(idx, e.target.value)}
                                         required
                                     />
                                     <button type="button" onClick={()=>removeHour(idx)}
-                                            className="px-2 py-1 text-sm rounded bg-red-100 text-red-700 hover:bg-red-200">
+                                            className="px-2 py-1 text-sm rounded bg-red-100 dark:bg-red-500/15 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-500/25">
                                         Usuń
                                     </button>
                                 </div>
@@ -217,26 +217,26 @@ export default function EditPlan() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label className="block text-sm font-medium">Data startu *</label>
-                            <input type="date" className="w-full border rounded p-2"
+                            <input type="date" className="w-full border dark:border-zinc-700 rounded p-2"
                                    value={startDate} onChange={(e)=>setStartDate(e.target.value)} required />
                         </div>
                         <div>
                             <label className="block text-sm font-medium">Data końca (opcjonalnie)</label>
-                            <input type="date" className="w-full border rounded p-2"
+                            <input type="date" className="w-full border dark:border-zinc-700 rounded p-2"
                                    value={endDate} onChange={(e)=>setEndDate(e.target.value)} />
-                            <p className="text-xs text-gray-500 mt-1">Pozostaw puste, jeśli plan jest bezterminowy.</p>
+                            <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">Pozostaw puste, jeśli plan jest bezterminowy.</p>
                         </div>
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium">Uwagi</label>
-                        <textarea className="w-full border rounded p-2"
+                        <textarea className="w-full border dark:border-zinc-700 rounded p-2"
                                   value={notes} onChange={(e)=>setNotes(e.target.value)} />
                     </div>
 
                     <div className="flex gap-2">
                         <button type="submit" className="btn-primary flex-1" disabled={!canSubmit}>Zapisz</button>
-                        <button type="button" onClick={remove} className="btn text-red-700 ring-red-200">Usuń</button>
+                        <button type="button" onClick={remove} className="btn text-red-700 dark:text-red-300 ring-red-200">Usuń</button>
                     </div>
                 </form>
             </div>
