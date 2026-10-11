@@ -12,6 +12,8 @@ import {
     where,
 } from "firebase/firestore";
 import DashboardLayout from "../components/DashboardLayout";
+import { formatCategoryForDisplay } from "../constants/categories";
+import { useI18n } from "../i18n/context";
 
 type Med = {
     id: string;
@@ -36,6 +38,7 @@ export default function FamilyMemberMeds() {
     const [myRole, setMyRole] =
         useState<"owner" | "admin" | "member" | "viewer">("member");
     const me = auth.currentUser;
+    const { t, tryT } = useI18n();
 
     const canEdit = useMemo(() => {
         if (!me) return false;
@@ -106,17 +109,17 @@ export default function FamilyMemberMeds() {
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h1 className="text-2xl font-semibold">
-                            💊 Leki: <span className="text-sky-600 dark:text-sky-400">{memberName}</span>
+                            {t("member.title")}<span className="text-sky-600 dark:text-sky-400">{memberName}</span>
                         </h1>
                         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                            Tryb: {canEdit ? "edycja dozwolona" : "tylko podgląd"}
+                            {canEdit ? t("member.modeEdit") : t("member.modeView")}
                         </p>
                     </div>
-                    <Link to="/family" className="btn">⬅️ Powrót do rodziny</Link>
+                    <Link to="/family" className="btn">{t("member.back")}</Link>
                 </div>
 
                 {meds.length === 0 ? (
-                    <p className="text-zinc-500 dark:text-zinc-400">Brak leków do wyświetlenia.</p>
+                    <p className="text-zinc-500 dark:text-zinc-400">{t("member.empty")}</p>
                 ) : (
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {meds.map((med) => (
@@ -127,15 +130,15 @@ export default function FamilyMemberMeds() {
                                 <h3 className="font-semibold text-lg text-indigo-700 dark:text-indigo-400">
                                     {med.name}
                                 </h3>
-                                <p className="text-sm text-zinc-600 dark:text-zinc-400">Dawka: {med.dose}</p>
+                                <p className="text-sm text-zinc-600 dark:text-zinc-400">{t("meds.dose", { value: med.dose })}</p>
                                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                                    Ilość: {med.quantity} {med.unit}
+                                    {t("meds.quantity", { value: `${med.quantity} ${tryT(`unit.${med.unit}`) ?? med.unit}` })}
                                 </p>
                                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                                    Kategoria: {med.category}
+                                    {t("meds.category", { value: formatCategoryForDisplay(med.category, tryT) })}
                                 </p>
                                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                                    Data ważności: {med.date}
+                                    {t("meds.expiry", { value: med.date })}
                                 </p>
 
                                 <div className="flex gap-2 mt-3">
@@ -143,7 +146,7 @@ export default function FamilyMemberMeds() {
                                         onClick={() => changeQty(med.id, -1)}
                                         className="px-3 py-1 rounded ring-1 ring-rose-200 dark:ring-rose-500/30 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-500/20 disabled:opacity-50"
                                         disabled={!canEdit}
-                                        title={canEdit ? "Zmniejsz ilość" : "Brak uprawnień do edycji"}
+                                        title={canEdit ? t("member.decrease") : t("member.noEdit")}
                                     >
                                         −
                                     </button>
@@ -151,7 +154,7 @@ export default function FamilyMemberMeds() {
                                         onClick={() => changeQty(med.id, 1)}
                                         className="px-3 py-1 rounded ring-1 ring-emerald-200 dark:ring-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 disabled:opacity-50"
                                         disabled={!canEdit}
-                                        title={canEdit ? "Zwiększ ilość" : "Brak uprawnień do edycji"}
+                                        title={canEdit ? t("member.increase") : t("member.noEdit")}
                                     >
                                         +
                                     </button>

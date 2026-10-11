@@ -35,7 +35,7 @@
 
 **Domowa Apteczka** to aplikacja webowa (SPA), która pomaga zapanować nad lekami w domu. Dodajesz to, co masz, z dawką, ilością, kategorią i datą ważności, a panel od razu pokazuje, co jest **w terminie**, co **traci ważność w ciągu 30 dni** i co jest **już po terminie**. Zalecenie lekarza zamieniasz w **plan leczenia** (dni tygodnia, godziny, data startu i opcjonalnie końca) i widzisz każdą dawkę w kalendarzu miesięcznym.
 
-Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę, zapraszasz bliskich krótkim kodem albo po e-mailu, nadajesz role (**owner**, **admin**, **member**, **viewer**) i możecie zaglądać sobie nawzajem do leków. Interfejs ma **motyw jasny i ciemny**, który do czasu Twojego wyboru podąża za ustawieniem systemu. Wszystko działa w przeglądarce na **Firebase Authentication** (e-mail + Google) i **Cloud Firestore**; nie ma własnego backendu do utrzymywania.
+Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę, zapraszasz bliskich krótkim kodem albo po e-mailu, nadajesz role (**właściciel**, **administrator**, **członek**, **obserwator**) i możecie zaglądać sobie nawzajem do leków. Interfejs jest dostępny **po polsku i po angielsku** (przełączanie flagą) oraz w **motywie jasnym i ciemnym**; do czasu Twojego wyboru oba ustawienia podążają za przeglądarką i systemem. Wszystko działa w przeglądarce na **Firebase Authentication** (e-mail + Google) i **Cloud Firestore**; nie ma własnego backendu do utrzymywania.
 
 <p align="center"><b>Słowa kluczowe</b></p>
 
@@ -68,6 +68,7 @@ Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę
       <img src="https://img.shields.io/badge/Role%20i%20uprawnienia-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjAgMTNjMCA1LTMuNSA3LjUtNy42NiA4Ljk1YTEgMSAwIDAgMS0uNjctLjAxQzcuNSAyMC41IDQgMTggNCAxM1Y2YTEgMSAwIDAgMSAxLTFjMiAwIDQuNS0xLjIgNi4yNC0yLjcyYTEuMTcgMS4xNyAwIDAgMSAxLjUyIDBDMTQuNTEgMy44MSAxNyA1IDE5IDVhMSAxIDAgMCAxIDEgMXoiIC8%2BIDxwYXRoIGQ9Im05IDEyIDIgMiA0LTQiIC8%2BIDwvc3ZnPg%3D%3D" alt="Role i uprawnienia" />
       <img src="https://img.shields.io/badge/CRUD-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjEuMTc0IDYuODEyYTEgMSAwIDAgMC0zLjk4Ni0zLjk4N0wzLjg0MiAxNi4xNzRhMiAyIDAgMCAwLS41LjgzbC0xLjMyMSA0LjM1MmEuNS41IDAgMCAwIC42MjMuNjIybDQuMzUzLTEuMzJhMiAyIDAgMCAwIC44My0uNDk3eiIgLz4gPHBhdGggZD0ibTE1IDUgNCA0IiAvPiA8L3N2Zz4%3D" alt="CRUD" />
       <img src="https://img.shields.io/badge/Tryb%20ciemny-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMTIgM2E2IDYgMCAwIDAgOSA5IDkgOSAwIDEgMS05LTlaIiAvPiA8L3N2Zz4%3D" alt="Tryb ciemny" />
+      <img src="https://img.shields.io/badge/i18n%20%28PL%20%2F%20EN%29-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJtNSA4IDYgNiIgLz4gPHBhdGggZD0ibTQgMTQgNi02IDItMyIgLz4gPHBhdGggZD0iTTIgNWgxMiIgLz4gPHBhdGggZD0iTTcgMmgxIiAvPiA8cGF0aCBkPSJtMjIgMjItNS0xMC01IDEwIiAvPiA8cGF0aCBkPSJNMTQgMThoNiIgLz4gPC9zdmc%2B" alt="i18n (PL / EN)" />
       <img src="https://img.shields.io/badge/Harmonogramy-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjEgNy41VjZhMiAyIDAgMCAwLTItMkg1YTIgMiAwIDAgMC0yIDJ2MTRhMiAyIDAgMCAwIDIgMmgzLjUiIC8%2BIDxwYXRoIGQ9Ik0xNiAydjQiIC8%2BIDxwYXRoIGQ9Ik04IDJ2NCIgLz4gPHBhdGggZD0iTTMgMTBoNSIgLz4gPHBhdGggZD0iTTE3LjUgMTcuNSAxNiAxNi4zVjE0IiAvPiA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI2IiAvPiA8L3N2Zz4%3D" alt="Harmonogramy" />
     </td>
   </tr>
@@ -95,7 +96,7 @@ Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę
   <img src="docs/demo.gif" alt="Demo: logowanie, filtrowanie leków po statusie ważności, zmiana ilości, dodanie leku, kalendarz planów, zmiana roli członka rodziny i podgląd jego leków" width="100%" />
 </p>
 
-<p align="center"><sub>Logowanie → kafelki ważności jako filtry → ilość +/− → tryb ciemny → nowy lek → kalendarz planów → powrót do jasnego → role w rodzinie → leki członka rodziny.</sub></p>
+<p align="center"><sub>Logowanie → kafelki ważności jako filtry → ilość +/− → tryb ciemny → nowy lek → kalendarz planów → powrót do jasnego → role w rodzinie → leki członka rodziny → zmiana języka flagą i z powrotem.</sub></p>
 
 ## Najważniejsze funkcje
 
@@ -141,9 +142,9 @@ Apteczka jest zwykle wspólna, dlatego aplikacja ma **rodziny**: tworzysz grupę
       <sub>Firebase Authentication: e-mail + hasło albo konto Google, do tego profil (imię, data urodzenia z wyliczanym wiekiem, zmiana hasła).</sub>
     </td>
     <td width="33%" valign="top">
-      <img src="docs/icons/sun-moon.svg" width="44" alt="" /><br />
-      <b>Motyw jasny i ciemny</b><br />
-      <sub>Przełącznik słońce / księżyc w nagłówku i na stronie logowania. Domyślnie motyw systemu, wybór jest zapamiętywany i nakładany przed pierwszym renderem, więc nic nie miga na biało.</sub>
+      <img src="docs/icons/languages.svg" width="44" alt="" /><br />
+      <b>Polski lub angielski, jasny lub ciemny</b><br />
+      <sub>Przełączniki flag i słońce / księżyc w nagłówku i na stronie logowania. Startują od ustawień przeglądarki i systemu, zapamiętują wybór, a motyw jest nakładany przed pierwszym renderem.</sub>
     </td>
     <td width="33%" valign="top">
       <img src="docs/icons/flame.svg" width="44" alt="" /><br />
@@ -286,9 +287,21 @@ document.documentElement.classList.toggle("dark", theme === "dark");
 
 Natywne kontrolki (listy, wybór daty, paski przewijania) też zmieniają kolory, bo `color-scheme` podąża za aktywnym motywem.
 
+### Polski i angielski
+
+Wszystkie teksty interfejsu są w jednym słowniku, `src/i18n/translations.ts`, z wersją polską i angielską dla każdego klucza; TypeScript nie zbuduje projektu, jeśli po angielskiej stronie brakuje klucza. `useI18n()` zwraca `t(klucz, parametry)` dla zwykłych napisów i `tn(klucz, liczba)` dla liczby mnogiej, która dobiera formę przez `Intl.PluralRules` (po polsku są trzy: *1 dzień*, *2 dni*, *5 dni*). Nazwa miesiąca w kalendarzu pochodzi z odpowiedniego locale `date-fns`, kategorie są tłumaczone po id, a wybrany język trafia do `localStorage` i do `<html lang>`.
+
+```ts
+const { t, tn } = useI18n();
+t("meds.hello", { name: "Grzegorz" });  // "Cześć, Grzegorz" / "Hello, Grzegorz"
+tn("meds.pill.soon", 15);               // "< 30 dni • za 15 dni" / "< 30 days • in 15 days"
+```
+
+Flagi to małe SVG zamiast emoji, bo Windows nie wyświetla emoji flag.
+
 ### Rodziny i role
 
-| Akcja | owner | admin | member | viewer |
+| Akcja | właściciel | administrator | członek | obserwator |
 |---|:---:|:---:|:---:|:---:|
 | Podgląd leków innych członków | ✓ | ✓ | ✓ | ✓ |
 | Zmiana ilości leków innych członków | ✓ | ✓ | | |
@@ -297,7 +310,7 @@ Natywne kontrolki (listy, wybór daty, paski przewijania) też zmieniają kolory
 | Usunięcie rodziny | ✓ | | | |
 | Dołączenie kodem, opuszczenie rodziny | ✓ | ✓ | ✓ | ✓ |
 
-Twórca rodziny zostaje ownerem i tej roli nie da się przenieść z poziomu UI. Osoby dołączające kodem zaczynają jako `member`.
+Twórca rodziny zostaje właścicielem i tej roli nie da się przenieść z poziomu UI. Osoby dołączające kodem zaczynają jako członek. W bazie role są zapisane po angielsku (`owner`, `admin`, `member`, `viewer`).
 
 ### Architektura
 
@@ -462,6 +475,7 @@ Leki leżą we własnej kolekcji, a apteczka użytkownika to lista ID w `medicin
 |---|---|
 | UI | React 19, TypeScript 5.9 |
 | Routing | React Router 7 (`BrowserRouter`, chronione ścieżki) |
+| i18n | Własny lekki słownik + kontekst Reacta, `Intl.PluralRules`, locale `date-fns` |
 | Style | Tailwind CSS 4 (`@tailwindcss/postcss`), tryb ciemny oparty na klasie (`@custom-variant dark`), kilka klas komponentów (`btn`, `card`, plakietki statusu) |
 | Build | Vite 7 (`rolldown-vite`), `@vitejs/plugin-react` |
 | Daty | date-fns 4 |
@@ -479,11 +493,16 @@ Domowa_Apteczka/
 │   └── firebase-messaging-sw.js
 ├── src/
 │   ├── components/
-│   │   ├── DashboardLayout.tsx    # sidebar, tytuł strony, przełącznik motywu, wylogowanie
+│   │   ├── DashboardLayout.tsx    # sidebar, tytuł strony, przełączniki języka i motywu, wylogowanie
+│   │   ├── LanguageToggle.tsx     # przełącznik flag PL / EN
 │   │   ├── ThemeToggle.tsx        # przełącznik słońce / księżyc
 │   │   └── ProtectedRoute.tsx     # przekierowuje niezalogowanych na "/"
 │   ├── constants/
-│   │   └── categories.ts          # 15 kategorii (id, etykieta PL, emoji)
+│   │   └── categories.ts          # 15 kategorii (id, emoji), etykiety z i18n
+│   ├── i18n/
+│   │   ├── translations.ts        # wszystkie teksty UI po polsku i angielsku
+│   │   ├── I18nProvider.tsx       # stan języka, t() i tn()
+│   │   └── context.ts             # useI18n()
 │   ├── lib/
 │   │   ├── firebase.ts            # aplikacja Firebase, auth, db, provider Google
 │   │   └── theme.ts               # useTheme(): zapisany wybór albo motyw systemu
@@ -550,7 +569,6 @@ npm run dev
 - **Uprawnienia są sprawdzane w UI.** Role decydują, które przyciski są aktywne; prawdziwa ochrona wymaga reguł Firestore Security Rules, które wymuszą to samo po stronie serwera.
 - **Member i viewer mają na razie te same prawa.** Obaj widzą leki innych członków tylko do odczytu; `viewer` jest przygotowany pod ostrzejsze reguły.
 - **Brak przypomnień.** `public/firebase-messaging-sw.js` jest przygotowany pod Firebase Cloud Messaging, ale powiadomienia o dawkach nie są jeszcze podpięte.
-- **Interfejs po polsku.** Etykiety i nazwy kategorii są w języku polskim.
 
 ## Licencja
 

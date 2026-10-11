@@ -16,10 +16,11 @@ import {
 import DashboardLayout from "../components/DashboardLayout";
 import {
     CATEGORIES,
-    CATEGORY_BY_ID,
+    categoryLabel,
     formatCategoryForDisplay,
     type MedCategory,
 } from "../constants/categories";
+import { useI18n } from "../i18n/context";
 
 /* ───────── Types zgodne z bazą ───────── */
 type Med = {
@@ -66,6 +67,8 @@ export default function MyMeds() {
     const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
     const navigate = useNavigate();
+    const { t, tn, tryT } = useI18n();
+    const unitLabel = (u: string) => tryT(`unit.${u}`) ?? u;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -162,12 +165,8 @@ export default function MyMeds() {
                     cmp = (a.name || "").localeCompare(b.name || "");
                     break;
                 case "category":
-                    // sortuj po etykiecie user-friendly
-                    const A =
-                        CATEGORY_BY_ID[a.category as MedCategory]?.label || a.category || "";
-                    const B =
-                        CATEGORY_BY_ID[b.category as MedCategory]?.label || b.category || "";
-                    cmp = A.localeCompare(B);
+                    // sortuj po etykiecie w bieżącym języku
+                    cmp = categoryLabel(a.category, tryT).localeCompare(categoryLabel(b.category, tryT));
                     break;
                 case "quantity":
                     cmp = (a.quantity || 0) - (b.quantity || 0);
@@ -177,7 +176,7 @@ export default function MyMeds() {
         });
 
         return arr;
-    }, [meds, statusFilter, categoryFilter, sortBy, sortOrder]);
+    }, [meds, statusFilter, categoryFilter, sortBy, sortOrder, tryT]);
 
     const changeQty = async (id: string, delta: number) => {
         const med = meds.find((m) => m.id === id);
@@ -193,7 +192,7 @@ export default function MyMeds() {
     const deleteMed = async (id: string) => {
         const user = auth.currentUser;
         if (!user) return;
-        if (!confirm("Czy na pewno chcesz usunąć ten lek?")) return;
+        if (!confirm(t("meds.confirmDelete"))) return;
 
         // 1) usuń dokument leku
         await deleteDoc(doc(db, "medicines", id));
@@ -228,20 +227,20 @@ export default function MyMeds() {
         if (s === "expired") {
             return (
                 <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-rose-100 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300 ring-rose-200 dark:ring-rose-500/30">
-          Po terminie • {Math.abs(d)} dni
+          {tn("meds.pill.expired", Math.abs(d))}
         </span>
             );
         }
         if (s === "soon") {
             return (
                 <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 ring-amber-200 dark:ring-amber-500/30">
-          &lt; 30 dni • za {d} dni
+          {tn("meds.pill.soon", d)}
         </span>
             );
         }
         return (
             <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ring-1 bg-emerald-100 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 ring-emerald-200 dark:ring-emerald-500/30">
-        W terminie • za {d} dni
+        {tn("meds.pill.ok", d)}
       </span>
         );
     };
@@ -251,8 +250,8 @@ export default function MyMeds() {
             {/* Nagłówek + CTA */}
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-800 dark:text-zinc-100">👋 Hello, {userName}</h1>
-                    <p className="text-gray-500 dark:text-zinc-400">Oto Twoja domowa apteczka</p>
+                    <h1 className="text-2xl font-semibold text-gray-800 dark:text-zinc-100">👋 {t("meds.hello", { name: userName })}</h1>
+                    <p className="text-gray-500 dark:text-zinc-400">{t("meds.subtitle")}</p>
                 </div>
             </div>
 
@@ -262,21 +261,21 @@ export default function MyMeds() {
                     onClick={() => setStatusFilter("ok")}
                     className="rounded-2xl p-4 ring-1 ring-zinc-200 dark:ring-zinc-800 bg-white/60 dark:bg-zinc-900/40 text-left"
                 >
-                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">W terminie</div>
+                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">{t("meds.tile.ok")}</div>
                     <div className="text-3xl font-semibold">{okCount}</div>
                 </button>
                 <button
                     onClick={() => setStatusFilter("soon")}
                     className="rounded-2xl p-4 ring-1 ring-zinc-200 dark:ring-zinc-800 bg-white/60 dark:bg-zinc-900/40 text-left"
                 >
-                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">&lt; 30 dni do terminu</div>
+                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">{t("meds.tile.soon")}</div>
                     <div className="text-3xl font-semibold">{soonCount}</div>
                 </button>
                 <button
                     onClick={() => setStatusFilter("expired")}
                     className="rounded-2xl p-4 ring-1 ring-zinc-200 dark:ring-zinc-800 bg-white/60 dark:bg-zinc-900/40 text-left"
                 >
-                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">Po terminie</div>
+                    <div className="text-sm text-gray-500 dark:text-zinc-400 mb-1">{t("meds.tile.expired")}</div>
                     <div className="text-3xl font-semibold">{expiredCount}</div>
                 </button>
             </div>
@@ -285,36 +284,36 @@ export default function MyMeds() {
             <div className="rounded-2xl p-4 ring-1 ring-zinc-200 dark:ring-zinc-800 bg-white/60 dark:bg-zinc-900/40 mb-6 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div className="flex flex-wrap gap-3">
                     <div className="flex flex-col">
-                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Status</label>
+                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">{t("meds.filter.status")}</label>
                         <select
                             className="border dark:border-zinc-700 rounded px-3 py-2"
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
                         >
-                            <option value="all">Wszystkie</option>
-                            <option value="ok">W terminie</option>
-                            <option value="soon">&lt; 30 dni</option>
-                            <option value="expired">Po terminie</option>
+                            <option value="all">{t("common.all")}</option>
+                            <option value="ok">{t("meds.status.ok")}</option>
+                            <option value="soon">{t("meds.status.soon")}</option>
+                            <option value="expired">{t("meds.status.expired")}</option>
                         </select>
                     </div>
 
                     <div className="flex flex-col">
-                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Kategoria</label>
+                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">{t("meds.filter.category")}</label>
                         <select
                             className="border dark:border-zinc-700 rounded px-3 py-2"
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
                         >
-                            <option value="all">Wszystkie</option>
-                            <optgroup label="Predefiniowane">
+                            <option value="all">{t("common.all")}</option>
+                            <optgroup label={t("meds.group.predefined")}>
                                 {categoryOptions.predefined.map((c) => (
                                     <option key={c.id} value={c.id}>
-                                        {c.emoji} {c.label}
+                                        {c.emoji} {categoryLabel(c.id, tryT)}
                                     </option>
                                 ))}
                             </optgroup>
                             {categoryOptions.extras.length > 0 && (
-                                <optgroup label="Inne (z danych)">
+                                <optgroup label={t("meds.group.extra")}>
                                     {categoryOptions.extras.map((raw) => (
                                         <option key={raw} value={raw}>
                                             {raw}
@@ -328,38 +327,38 @@ export default function MyMeds() {
 
                 <div className="flex flex-wrap gap-3">
                     <div className="flex flex-col">
-                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Sortuj wg</label>
+                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">{t("meds.filter.sortBy")}</label>
                         <select
                             className="border dark:border-zinc-700 rounded px-3 py-2"
                             value={sortBy}
                             onChange={(e) => setSortBy(e.target.value as SortKey)}
                         >
-                            <option value="date">Data ważności</option>
-                            <option value="name">Nazwa</option>
-                            <option value="category">Kategoria</option>
-                            <option value="quantity">Ilość</option>
+                            <option value="date">{t("meds.sort.date")}</option>
+                            <option value="name">{t("meds.sort.name")}</option>
+                            <option value="category">{t("meds.sort.category")}</option>
+                            <option value="quantity">{t("meds.sort.quantity")}</option>
                         </select>
                     </div>
 
                     <div className="flex flex-col">
-                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">Kierunek</label>
+                        <label className="text-xs text-gray-500 dark:text-zinc-400 mb-1">{t("meds.filter.order")}</label>
                         <select
                             className="border dark:border-zinc-700 rounded px-3 py-2"
                             value={sortOrder}
                             onChange={(e) => setSortOrder(e.target.value as SortOrder)}
                         >
-                            <option value="asc">Rosnąco</option>
-                            <option value="desc">Malejąco</option>
+                            <option value="asc">{t("meds.order.asc")}</option>
+                            <option value="desc">{t("meds.order.desc")}</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             {/* Lista leków */}
-            <h2 className="text-xl font-bold mb-4">Moje leki</h2>
+            <h2 className="text-xl font-bold mb-4">{t("meds.listTitle")}</h2>
 
             {visibleMeds.length === 0 ? (
-                <p className="text-gray-500 dark:text-zinc-400">Brak leków spełniających filtry.</p>
+                <p className="text-gray-500 dark:text-zinc-400">{t("meds.empty")}</p>
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {visibleMeds.map((med) => (
@@ -372,16 +371,16 @@ export default function MyMeds() {
                                 <StatusPill date={med.date} />
                             </div>
 
-                            <p className="text-sm text-gray-600 dark:text-zinc-400">Dawka: {med.dose}</p>
+                            <p className="text-sm text-gray-600 dark:text-zinc-400">{t("meds.dose", { value: med.dose })}</p>
                             <p className="text-sm text-gray-600 dark:text-zinc-400">
-                                Ilość: {med.quantity} {med.unit}
+                                {t("meds.quantity", { value: `${med.quantity} ${unitLabel(med.unit)}` })}
                             </p>
                             <p className="text-sm text-gray-600 dark:text-zinc-400">
-                                Kategoria: {formatCategoryForDisplay(med.category)}
+                                {t("meds.category", { value: formatCategoryForDisplay(med.category, tryT) })}
                             </p>
-                            <p className="text-sm text-gray-600 dark:text-zinc-400">Data ważności: {med.date}</p>
+                            <p className="text-sm text-gray-600 dark:text-zinc-400">{t("meds.expiry", { value: med.date })}</p>
                             {med.notes && (
-                                <p className="text-sm text-gray-500 dark:text-zinc-400 border-t dark:border-zinc-700 pt-2">Uwagi: {med.notes}</p>
+                                <p className="text-sm text-gray-500 dark:text-zinc-400 border-t dark:border-zinc-700 pt-2">{t("meds.notes", { value: med.notes })}</p>
                             )}
 
                             <div className="flex flex-wrap gap-2 mt-3">
@@ -402,13 +401,13 @@ export default function MyMeds() {
                                     onClick={() => navigate(`/edit-med/${med.id}`)}
                                     className="ml-auto px-3 py-1 bg-blue-100 dark:bg-blue-500/15 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-500/25"
                                 >
-                                    Edytuj
+                                    {t("common.edit")}
                                 </button>
                                 <button
                                     onClick={() => deleteMed(med.id)}
                                     className="px-3 py-1 bg-rose-100 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300 rounded hover:bg-rose-200 dark:hover:bg-rose-500/25"
                                 >
-                                    Usuń
+                                    {t("common.delete")}
                                 </button>
                             </div>
                         </div>

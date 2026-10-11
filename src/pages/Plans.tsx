@@ -8,7 +8,10 @@ import {
     format, isAfter, isBefore, isSameDay, isSameMonth,
     parseISO, startOfMonth, startOfWeek, addDays
 } from "date-fns";
+import { pl as plLocale, enUS } from "date-fns/locale";
 import { Link } from "react-router-dom";
+import { useI18n } from "../i18n/context";
+import type { TranslationKey } from "../i18n/translations";
 
 type Plan = {
     id: string;
@@ -35,6 +38,10 @@ export default function Plans() {
     const [plans, setPlans] = useState<Plan[]>([]);
     const [meds, setMeds] = useState<MedLite[]>([]);
     const [month, setMonth] = useState<Date>(new Date());
+    const { lang, t } = useI18n();
+    const locale = lang === "pl" ? plLocale : enUS;
+    const monthLabel = format(month, "LLLL yyyy", { locale });
+    const dayShort = (d: string) => t(`dayShort.${d}` as TranslationKey);
 
     useEffect(() => {
         const load = async () => {
@@ -70,7 +77,7 @@ export default function Plans() {
 
     const medNameById = (id: string) => {
         const m = meds.find(x => x.id === id);
-        if (!m) return "(nieznany lek)";
+        if (!m) return t("plans.unknownMed");
         return m.dose ? `${m.name} (${m.dose})` : m.name;
     };
 
@@ -102,7 +109,7 @@ export default function Plans() {
 
                 for (const h of p.hours) {
                     const time = h.length === 5 ? h : h.padStart(5, "0");
-                    const text = `${time} — ${medNameById(p.medicine_id)} • ${p.name}`;
+                    const text = `${time} · ${medNameById(p.medicine_id)} · ${p.name}`;
                     const key = format(d, "yyyy-MM-dd");
                     map.get(key)?.push({ time, text, planId: p.id });
                 }
@@ -114,7 +121,7 @@ export default function Plans() {
             map.set(k, arr);
         }
         return map;
-    }, [plans, meds, month]);
+    }, [plans, meds, month, t]);
 
     const start = startOfWeek(startOfMonth(month), { weekStartsOn: 1 });
     const end = endOfWeek(endOfMonth(month), { weekStartsOn: 1 });
@@ -126,23 +133,23 @@ export default function Plans() {
             <div className="max-w-5xl mx-auto">
                 <div className="mb-6 flex items-center justify-between">
                     <div>
-                        <h2 className="text-xl font-bold">Kalendarz planów</h2>
+                        <h2 className="text-xl font-bold">{t("plans.title")}</h2>
                         <p className="text-sm text-gray-500 dark:text-zinc-400">
-                            Widok miesiąca: {format(month, "LLLL yyyy")}
+                            {t("plans.monthView", { month: monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1) })}
                         </p>
                     </div>
                     <div className="flex gap-2">
-                        <Link to="/addplan" className="btn">➕ Dodaj plan</Link>
-                        <button className="btn" onClick={()=>setMonth(addMonths(month, -1))}>← Poprzedni</button>
-                        <button className="btn" onClick={()=>setMonth(new Date())}>Dziś</button>
-                        <button className="btn" onClick={()=>setMonth(addMonths(month, 1))}>Następny →</button>
+                        <Link to="/addplan" className="btn">{t("plans.add")}</Link>
+                        <button className="btn" onClick={()=>setMonth(addMonths(month, -1))}>{t("plans.prev")}</button>
+                        <button className="btn" onClick={()=>setMonth(new Date())}>{t("plans.today")}</button>
+                        <button className="btn" onClick={()=>setMonth(addMonths(month, 1))}>{t("plans.next")}</button>
                     </div>
                 </div>
 
                 {/* nagłówki dni */}
                 <div className="grid grid-cols-7 text-xs font-medium text-gray-500 dark:text-zinc-400 mb-2 px-1">
-                    {["Pon","Wto","Śro","Czw","Pią","Sob","Ndz"].map((d) => (
-                        <div key={d} className="px-2 py-1">{d}</div>
+                    {DOW.map((d) => (
+                        <div key={d} className="px-2 py-1">{dayShort(d)}</div>
                     ))}
                 </div>
 
@@ -162,18 +169,16 @@ export default function Plans() {
                     {format(d, "d")}
                   </span>
                                     {isSameDay(d, new Date()) && (
-                                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300">dziś</span>
+                                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300">{t("plans.todayBadge")}</span>
                                     )}
                                 </div>
                                 <div className="space-y-1 overflow-auto">
-                                    {items.length === 0 ? (
-                                        <div className="text-xs text-gray-300 dark:text-zinc-600">—</div>
-                                    ) : items.map((ev, i) => (
+                                    {items.map((ev, i) => (
                                         <Link
                                             key={i}
                                             to={`/editplan/${ev.planId}`}
                                             className="block text-[11px] leading-snug px-2 py-1 rounded bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-500/25"
-                                            title="Edytuj plan"
+                                            title={t("plans.editPlan")}
                                         >
                                             {ev.text}
                                         </Link>
@@ -186,18 +191,21 @@ export default function Plans() {
 
                 {/* lista planów */}
                 <div className="mt-8">
-                    <h3 className="font-semibold mb-2">Twoje plany</h3>
+                    <h3 className="font-semibold mb-2">{t("plans.yourPlans")}</h3>
                     {plans.length === 0 ? (
-                        <p className="text-sm text-gray-500 dark:text-zinc-400">Brak planów. Dodaj pierwszy.</p>
+                        <p className="text-sm text-gray-500 dark:text-zinc-400">{t("plans.empty")}</p>
                     ) : (
                         <ul className="text-sm list-disc pl-5 space-y-1">
                             {plans.map(p => (
                                 <li key={p.id}>
-                                    <span className="font-medium">{p.name}</span>{" "}
-                                    – {medNameById(p.medicine_id)} • dni: {p.frequency.join(", ")} • godz.: {p.hours.join(", ")} •
-                                    {` `}od {p.start_date}{p.end_date ? ` do ${p.end_date}` : " (bez końca)"}
-                                    {"  "}
-                                    <Link to={`/editplan/${p.id}`} className="ml-2 underline text-indigo-700 dark:text-indigo-300">Edytuj</Link>
+                                    <span className="font-medium">{p.name}</span>
+                                    {" · "}{medNameById(p.medicine_id)}
+                                    {" · "}{t("plans.days", { value: p.frequency.map(dayShort).join(", ") })}
+                                    {" · "}{t("plans.hours", { value: p.hours.join(", ") })}
+                                    {" · "}{p.end_date
+                                        ? t("plans.range", { start: p.start_date, end: p.end_date })
+                                        : t("plans.rangeOpen", { start: p.start_date })}
+                                    <Link to={`/editplan/${p.id}`} className="ml-2 underline text-indigo-700 dark:text-indigo-300">{t("common.edit")}</Link>
                                 </li>
                             ))}
                         </ul>

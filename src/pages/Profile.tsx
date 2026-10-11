@@ -1,6 +1,7 @@
 // src/pages/Profile.tsx
 import { useEffect, useMemo, useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
+import { useI18n } from "../i18n/context";
 import { auth, db } from "../lib/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { updatePassword, updateProfile, onAuthStateChanged } from "firebase/auth";
@@ -34,6 +35,7 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [changingPwd, setChangingPwd] = useState(false);
+    const { t, tn } = useI18n();
 
     const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
     const age = useMemo(() => computeAge(birthDate), [birthDate]);
@@ -57,7 +59,7 @@ export default function Profile() {
                 }
             } catch {
                 setMsgType("err");
-                setMsg("Nie udało się pobrać profilu.");
+                setMsg(t("profile.loadError"));
             } finally {
                 setLoading(false);
             }
@@ -75,7 +77,7 @@ export default function Profile() {
         setMsg("");
         try {
             const user = auth.currentUser;
-            if (!user) throw new Error("Brak zalogowanego użytkownika.");
+            if (!user) throw new Error(t("profile.noUser"));
 
             if (user.displayName !== name.trim()) {
                 await updateProfile(user, { displayName: name.trim() });
@@ -88,10 +90,10 @@ export default function Profile() {
                 gender,
             });
 
-            flash("ok", "Dane zapisane ✅");
+            flash("ok", t("profile.saved"));
         } catch (e: unknown) {
             const err = e as { message?: string };
-            flash("err", err?.message ? `Błąd: ${err.message}` : "Nie udało się zapisać danych.");
+            flash("err", err?.message ? t("common.errorPrefix", { message: err.message }) : t("profile.saveError"));
         } finally {
             setSaving(false);
         }
@@ -102,18 +104,18 @@ export default function Profile() {
         setMsg("");
         try {
             const user = auth.currentUser;
-            if (!user) throw new Error("Brak zalogowanego użytkownika.");
-            if (newPassword.length < 6) throw new Error("Nowe hasło powinno mieć co najmniej 6 znaków.");
-            if (newPassword !== newPassword2) throw new Error("Hasła nie są identyczne.");
+            if (!user) throw new Error(t("profile.noUser"));
+            if (newPassword.length < 6) throw new Error(t("profile.pwdShort"));
+            if (newPassword !== newPassword2) throw new Error(t("profile.pwdMismatch"));
             await updatePassword(user, newPassword); // bez aktualnego hasła (jeśli sesja świeża)
             setNewPassword(""); setNewPassword2("");
-            flash("ok", "Hasło zostało zmienione 🎉");
+            flash("ok", t("profile.pwdChanged"));
         } catch (e: unknown) {
             const err = e as { code?: string; message?: string };
             if (err.code === "auth/requires-recent-login") {
-                flash("err", "Sesja jest nieaktualna. Wyloguj się i zaloguj ponownie, a następnie zmień hasło.");
+                flash("err", t("profile.pwdRelogin"));
             } else {
-                flash("err", err?.message ? `Błąd: ${err.message}` : "Nie udało się zmienić hasła.");
+                flash("err", err?.message ? t("common.errorPrefix", { message: err.message }) : t("profile.pwdError"));
             }
         } finally {
             setChangingPwd(false);
@@ -123,20 +125,20 @@ export default function Profile() {
     return (
         <DashboardLayout>
             {loading ? (
-                <div className="min-h-[40vh] grid place-items-center text-gray-500 dark:text-zinc-400">Ładowanie profilu…</div>
+                <div className="min-h-[40vh] grid place-items-center text-gray-500 dark:text-zinc-400">{t("profile.loading")}</div>
             ) : (
                 <div className="max-w-5xl mx-auto">
-                    <h1 className="text-2xl font-semibold mb-6">Twój profil</h1>
+                    <h1 className="text-2xl font-semibold mb-6">{t("profile.title")}</h1>
 
                     {/* Dwa boxy obok siebie */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Box: Dane osobowe */}
                         <section className="bg-white dark:bg-zinc-900 rounded-2xl shadow p-6">
-                            <h2 className="text-lg font-medium mb-4">Dane osobowe</h2>
+                            <h2 className="text-lg font-medium mb-4">{t("profile.personal")}</h2>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium">Imię i nazwisko</label>
+                                    <label className="block text-sm font-medium">{t("person.fullName")}</label>
                                     <input
                                         className="w-full border dark:border-zinc-700 rounded p-2"
                                         value={name}
@@ -146,7 +148,7 @@ export default function Profile() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium">Data urodzenia</label>
+                                    <label className="block text-sm font-medium">{t("person.birthDate")}</label>
                                     <input
                                         type="date"
                                         className="w-full border dark:border-zinc-700 rounded p-2"
@@ -155,28 +157,28 @@ export default function Profile() {
                                         onChange={(ev) => setBirthDate(ev.target.value)}
                                     />
                                     {birthDate && (
-                                        <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">Wiek: <b>{age}</b> lat</p>
+                                        <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{tn("person.age", age)}</p>
                                     )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium">Płeć</label>
+                                    <label className="block text-sm font-medium">{t("person.gender")}</label>
                                     <select
                                         value={gender}
                                         onChange={(ev) => setGender(ev.target.value as Gender)}
                                         className="w-full h-10 rounded-md border dark:border-zinc-700 px-3 bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     >
-                                        <option value="male">Mężczyzna</option>
-                                        <option value="female">Kobieta</option>
-                                        <option value="other">Inna / nie chcę podawać</option>
+                                        <option value="male">{t("gender.male")}</option>
+                                        <option value="female">{t("gender.female")}</option>
+                                        <option value="other">{t("gender.other")}</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium">Email</label>
+                                    <label className="block text-sm font-medium">{t("common.email")}</label>
                                     <input className="w-full border dark:border-zinc-700 rounded p-2 bg-gray-50 dark:bg-zinc-950" value={email} disabled />
                                     <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                                        Zmiana emaila zwykle wymaga ponownego logowania.
+                                        {t("profile.emailHint")}
                                     </p>
                                 </div>
 
@@ -185,18 +187,18 @@ export default function Profile() {
                                     disabled={saving}
                                     className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-60"
                                 >
-                                    {saving ? "Zapisywanie…" : "Zapisz dane"}
+                                    {saving ? t("common.saving") : t("profile.saveData")}
                                 </button>
                             </div>
                         </section>
 
                         {/* Box: Zmiana hasła */}
                         <section className="bg-white dark:bg-zinc-900 rounded-2xl shadow p-6">
-                            <h2 className="text-lg font-medium mb-4">Zmiana hasła</h2>
+                            <h2 className="text-lg font-medium mb-4">{t("profile.passwordTitle")}</h2>
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium">Nowe hasło</label>
+                                    <label className="block text-sm font-medium">{t("profile.newPassword")}</label>
                                     <input
                                         type="password"
                                         className="w-full border dark:border-zinc-700 rounded p-2"
@@ -208,7 +210,7 @@ export default function Profile() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium">Powtórz nowe hasło</label>
+                                    <label className="block text-sm font-medium">{t("profile.repeatPassword")}</label>
                                     <input
                                         type="password"
                                         className="w-full border dark:border-zinc-700 rounded p-2"
@@ -224,7 +226,7 @@ export default function Profile() {
                                     disabled={changingPwd}
                                     className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-60"
                                 >
-                                    {changingPwd ? "Zmiana hasła…" : "Zmień hasło"}
+                                    {changingPwd ? t("profile.changingPassword") : t("profile.changePassword")}
                                 </button>
                             </div>
                         </section>

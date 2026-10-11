@@ -9,6 +9,8 @@ import {
     where
 } from "firebase/firestore";
 import DashboardLayout from "../components/DashboardLayout";
+import { useI18n } from "../i18n/context";
+import type { TranslationKey } from "../i18n/translations";
 
 // Typ uproszczony leku tylko do selecta
 type MedLite = { id: string; name: string; dose?: string };
@@ -19,6 +21,7 @@ const ALL_DAYS: Array<"monday"|"tuesday"|"wednesday"|"thursday"|"friday"|"saturd
 
 export default function AddPlan() {
     const [meds, setMeds] = useState<MedLite[]>([]);
+    const { t } = useI18n();
     const [medicineId, setMedicineId] = useState("");
     const [name, setName] = useState("");
     const [notes, setNotes] = useState("");
@@ -44,7 +47,7 @@ export default function AddPlan() {
                 medIds.push(...arr);
             });
 
-            // jeśli nie ma leków — nic dalej
+            // jeśli nie ma leków, nie ma czego dociągać
             if (!medIds.length) {
                 setMeds([]);
                 return;
@@ -52,7 +55,7 @@ export default function AddPlan() {
 
             // pobierz ich dokumenty
             const results: MedLite[] = [];
-            // Firestore nie ma "in" po __name__ w tej prostszej wersji — lecimy pętlą
+            // Firestore nie ma "in" po __name__ w tej prostszej wersji, więc lecimy pętlą
             for (const id of medIds) {
                 const qMed = query(collection(db, "medicines"), where("__name__", "==", id));
                 const medSnap = await getDocs(qMed);
@@ -87,7 +90,7 @@ export default function AddPlan() {
         if (!user) return;
 
         if (!canSubmit) {
-            alert("Uzupełnij wymagane pola: nazwa, lek, data startu, co najmniej 1 dzień i 1 godzina.");
+            alert(t("planForm.required"));
             return;
         }
 
@@ -97,12 +100,12 @@ export default function AddPlan() {
             medicine_id: medicineId,  // powiązanie z lekiem
             notes,
             start_date: startDate,    // "YYYY-MM-DD"
-            end_date: endDate || "",  // jeśli brak — puste
+            end_date: endDate || "",  // brak daty = plan bez końca
             frequency,                // np. ["monday","tuesday"]
             hours                     // np. ["08:00","18:00"]
         });
 
-        alert("Plan leczenia zapisany.");
+        alert(t("planForm.saved"));
         // reset
         setName("");
         setMedicineId("");
@@ -116,24 +119,24 @@ export default function AddPlan() {
     return (
         <DashboardLayout>
             <div className="max-w-2xl mx-auto bg-white dark:bg-zinc-900 shadow rounded-lg p-6">
-                <h2 className="text-xl font-bold mb-4">Dodaj plan leczenia</h2>
+                <h2 className="text-xl font-bold mb-4">{t("planForm.addTitle")}</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium">Nazwa planu *</label>
+                        <label className="block text-sm font-medium">{t("planForm.name")}</label>
                         <input className="w-full border dark:border-zinc-700 rounded p-2"
                                value={name}
                                onChange={(e)=>setName(e.target.value)}
-                               placeholder="Nazwa np. 'Antybiotyk – 7 dni'"
+                               placeholder={t("planForm.namePlaceholder")}
                                required />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Powiązany lek *</label>
+                        <label className="block text-sm font-medium">{t("planForm.med")}</label>
                         <select className="w-full border dark:border-zinc-700 rounded p-2"
                                 value={medicineId}
                                 onChange={(e)=>setMedicineId(e.target.value)}
                                 required>
-                            <option value="" disabled>— wybierz lek —</option>
+                            <option value="" disabled>{t("planForm.chooseMed")}</option>
                             {meds.map(m => (
                                 <option key={m.id} value={m.id}>
                                     {m.name}{m.dose ? ` (${m.dose})` : ""}
@@ -142,27 +145,27 @@ export default function AddPlan() {
                         </select>
                         {!meds.length && (
                             <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                                Nie masz jeszcze leków. Dodaj je w „Moje leki” → „Dodaj lek”.
+                                {t("planForm.noMeds")}
                             </p>
                         )}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-1">Dni tygodnia *</label>
+                        <label className="block text-sm font-medium mb-1">{t("planForm.days")}</label>
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                             {ALL_DAYS.map(d => (
                                 <label key={d} className={`px-3 py-2 rounded-lg ring-1 cursor-pointer select-none
                   ${dayChecked(d) ? "ring-indigo-500 bg-indigo-50 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300"
                                     : "ring-gray-200 dark:ring-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800"}`}>
                                     <input type="checkbox" className="mr-2" checked={dayChecked(d)} onChange={()=>toggleDay(d)} />
-                                    {d.charAt(0).toUpperCase() + d.slice(1)}
+                                    {t(`day.${d}` as TranslationKey)}
                                 </label>
                             ))}
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-2">Godziny przyjęcia *</label>
+                        <label className="block text-sm font-medium mb-2">{t("planForm.hours")}</label>
                         <div className="space-y-2">
                             {hours.map((h, idx) => (
                                 <div key={idx} className="flex gap-2 items-center">
@@ -175,36 +178,36 @@ export default function AddPlan() {
                                     />
                                     <button type="button" onClick={()=>removeHour(idx)}
                                             className="px-2 py-1 text-sm rounded bg-red-100 dark:bg-red-500/15 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-500/25">
-                                        Usuń
+                                        {t("common.delete")}
                                     </button>
                                 </div>
                             ))}
-                            <button type="button" onClick={addHour} className="btn">+ Dodaj godzinę</button>
+                            <button type="button" onClick={addHour} className="btn">{t("planForm.addHour")}</button>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                            <label className="block text-sm font-medium">Data startu *</label>
+                            <label className="block text-sm font-medium">{t("planForm.start")}</label>
                             <input type="date" className="w-full border dark:border-zinc-700 rounded p-2"
                                    value={startDate} onChange={(e)=>setStartDate(e.target.value)} required />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium">Data końca (opcjonalnie)</label>
+                            <label className="block text-sm font-medium">{t("planForm.end")}</label>
                             <input type="date" className="w-full border dark:border-zinc-700 rounded p-2"
                                    value={endDate} onChange={(e)=>setEndDate(e.target.value)} />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Uwagi</label>
+                        <label className="block text-sm font-medium">{t("common.notes")}</label>
                         <textarea className="w-full border dark:border-zinc-700 rounded p-2"
                                   value={notes} onChange={(e)=>setNotes(e.target.value)}
-                                  placeholder="Dodatkowe instrukcje lekarza…" />
+                                  placeholder={t("planForm.notesPlaceholder")} />
                     </div>
 
                     <button type="submit" className="w-full btn-primary" disabled={!canSubmit}>
-                        Zapisz plan
+                        {t("planForm.submit")}
                     </button>
                 </form>
             </div>

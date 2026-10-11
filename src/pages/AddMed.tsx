@@ -12,7 +12,8 @@ import {
     where,
 } from "firebase/firestore";
 import DashboardLayout from "../components/DashboardLayout";
-import { CATEGORIES, type MedCategory } from "../constants/categories";
+import { CATEGORIES, categoryLabel, type MedCategory } from "../constants/categories";
+import { useI18n } from "../i18n/context";
 
 export function AddMed() {
     const [name, setName] = useState("");
@@ -22,6 +23,7 @@ export function AddMed() {
     const [category, setCategory] = useState<MedCategory>("other"); // ✅ predefiniowane ID
     const [date, setDate] = useState("");
     const [notes, setNotes] = useState("");
+    const { t, tryT } = useI18n();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -53,7 +55,7 @@ export function AddMed() {
             });
         }
 
-        alert("Lek dodany!");
+        alert(t("medForm.added"));
         setName("");
         setDose("");
         setQuantity(0);
@@ -66,10 +68,10 @@ export function AddMed() {
     return (
         <DashboardLayout>
             <div className="max-w-xl mx-auto bg-white dark:bg-zinc-900 shadow rounded-lg p-6">
-                <h2 className="text-xl font-bold mb-4">Dodaj nowy lek</h2>
+                <h2 className="text-xl font-bold mb-4">{t("medForm.addTitle")}</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium">Nazwa leku</label>
+                        <label className="block text-sm font-medium">{t("medForm.name")}</label>
                         <input
                             className="w-full border dark:border-zinc-700 rounded p-2"
                             value={name}
@@ -79,7 +81,7 @@ export function AddMed() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Dawka</label>
+                        <label className="block text-sm font-medium">{t("medForm.dose")}</label>
                         <input
                             className="w-full border dark:border-zinc-700 rounded p-2"
                             value={dose}
@@ -90,7 +92,7 @@ export function AddMed() {
 
                     <div className="flex gap-3">
                         <div className="flex-1">
-                            <label className="block text-sm font-medium">Ilość</label>
+                            <label className="block text-sm font-medium">{t("medForm.quantity")}</label>
                             <input
                                 type="number"
                                 className="w-full border dark:border-zinc-700 rounded p-2"
@@ -101,21 +103,21 @@ export function AddMed() {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium">Jednostka</label>
+                            <label className="block text-sm font-medium">{t("medForm.unit")}</label>
                             <select
                                 className="w-full border dark:border-zinc-700 rounded p-2"
                                 value={unit}
                                 onChange={(e) => setUnit(e.target.value)}
                             >
-                                <option value="pcs">szt</option>
-                                <option value="ml">ml</option>
-                                <option value="mg">mg</option>
+                                <option value="pcs">{t("unit.pcs")}</option>
+                                <option value="ml">{t("unit.ml")}</option>
+                                <option value="mg">{t("unit.mg")}</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Kategoria</label>
+                        <label className="block text-sm font-medium">{t("medForm.category")}</label>
                         <select
                             className="w-full border dark:border-zinc-700 rounded p-2"
                             value={category}
@@ -123,17 +125,17 @@ export function AddMed() {
                         >
                             {CATEGORIES.map((c) => (
                                 <option key={c.id} value={c.id}>
-                                    {c.emoji} {c.label}
+                                    {c.emoji} {categoryLabel(c.id, tryT)}
                                 </option>
                             ))}
                         </select>
                         <p className="mt-1 text-xs text-gray-500 dark:text-zinc-400">
-                            Wybierz z listy predefiniowanych kategorii.
+                            {t("medForm.categoryHint")}
                         </p>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Data ważności</label>
+                        <label className="block text-sm font-medium">{t("medForm.expiry")}</label>
                         <input
                             type="date"
                             className="w-full border dark:border-zinc-700 rounded p-2"
@@ -144,7 +146,7 @@ export function AddMed() {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium">Uwagi</label>
+                        <label className="block text-sm font-medium">{t("common.notes")}</label>
                         <textarea
                             className="w-full border dark:border-zinc-700 rounded p-2"
                             value={notes}
@@ -156,7 +158,7 @@ export function AddMed() {
                         type="submit"
                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded py-2 font-medium"
                     >
-                        Zapisz
+                        {t("common.save")}
                     </button>
                 </form>
             </div>

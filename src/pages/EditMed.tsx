@@ -4,7 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../lib/firebase";
 import DashboardLayout from "../components/DashboardLayout";
-import { CATEGORIES } from "../constants/categories";
+import { CATEGORIES, categoryLabel } from "../constants/categories";
+import { useI18n } from "../i18n/context";
 
 export default function EditMed() {
     const { id } = useParams<{ id: string }>();
@@ -21,6 +22,7 @@ export default function EditMed() {
     });
 
     const navigate = useNavigate();
+    const { t, tryT } = useI18n();
 
     useEffect(() => {
         const fetchMed = async () => {
@@ -29,7 +31,7 @@ export default function EditMed() {
                 const ref = doc(db, "medicines", id);
                 const snap = await getDoc(ref);
                 if (!snap.exists()) {
-                    setError("Nie znaleziono leku.");
+                    setError(t("medForm.notFound"));
                     return;
                 }
                 const data = snap.data();
@@ -43,7 +45,7 @@ export default function EditMed() {
                     notes: data.notes || "",
                 });
             } catch (e) {
-                setError("Błąd podczas pobierania danych.");
+                setError(t("medForm.loadError"));
             } finally {
                 setLoading(false);
             }
@@ -67,14 +69,14 @@ export default function EditMed() {
             await updateDoc(doc(db, "medicines", id), form);
             navigate("/mymeds");
         } catch (e) {
-            setError("Błąd podczas zapisywania zmian.");
+            setError(t("medForm.saveError"));
         }
     };
 
     if (loading)
         return (
             <DashboardLayout>
-                <p className="text-center text-gray-500 dark:text-zinc-400">Ładowanie danych...</p>
+                <p className="text-center text-gray-500 dark:text-zinc-400">{t("medForm.loading")}</p>
             </DashboardLayout>
         );
 
@@ -88,13 +90,13 @@ export default function EditMed() {
     return (
         <DashboardLayout>
             <div className="max-w-md mx-auto bg-white dark:bg-zinc-900 p-6 rounded-xl shadow">
-                <h2 className="text-xl font-semibold mb-4">Edytuj lek</h2>
+                <h2 className="text-xl font-semibold mb-4">{t("medForm.editTitle")}</h2>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                     <input
                         type="text"
                         name="name"
-                        placeholder="Nazwa leku"
+                        placeholder={t("medForm.name")}
                         value={form.name}
                         onChange={handleChange}
                         className="border dark:border-zinc-700 rounded p-2"
@@ -104,7 +106,7 @@ export default function EditMed() {
                     <input
                         type="text"
                         name="dose"
-                        placeholder="Dawka (np. 500mg)"
+                        placeholder={t("medForm.dosePlaceholder")}
                         value={form.dose}
                         onChange={handleChange}
                         className="border dark:border-zinc-700 rounded p-2"
@@ -114,7 +116,7 @@ export default function EditMed() {
                     <input
                         type="number"
                         name="quantity"
-                        placeholder="Ilość"
+                        placeholder={t("medForm.quantity")}
                         value={form.quantity}
                         onChange={handleChange}
                         className="border dark:border-zinc-700 rounded p-2"
@@ -122,15 +124,21 @@ export default function EditMed() {
                         min={0}
                     />
 
-                    <input
-                        type="text"
+                    <select
                         name="unit"
-                        placeholder="Jednostka (np. szt, ml)"
                         value={form.unit}
                         onChange={handleChange}
                         className="border dark:border-zinc-700 rounded p-2"
+                        aria-label={t("medForm.unit")}
                         required
-                    />
+                    >
+                        {["pcs", "ml", "mg"].map((u) => (
+                            <option key={u} value={u}>{tryT(`unit.${u}`) ?? u}</option>
+                        ))}
+                        {form.unit && !["pcs", "ml", "mg"].includes(form.unit) && (
+                            <option value={form.unit}>{form.unit}</option>
+                        )}
+                    </select>
 
                     <input
                         type="date"
@@ -144,7 +152,7 @@ export default function EditMed() {
                     {/* ✅ Kategoria z emoji */}
                     <div>
                         <label className="block text-sm font-medium text-gray-600 dark:text-zinc-400 mb-1">
-                            Kategoria
+                            {t("medForm.category")}
                         </label>
                         <select
                             name="category"
@@ -152,10 +160,10 @@ export default function EditMed() {
                             onChange={handleChange}
                             className="w-full border dark:border-zinc-700 rounded p-2"
                         >
-                            <option value="">— wybierz kategorię —</option>
+                            <option value="">{t("medForm.chooseCategory")}</option>
                             {CATEGORIES.map((cat) => (
                                 <option key={cat.id} value={cat.id}>
-                                    {cat.emoji} {cat.label}
+                                    {cat.emoji} {categoryLabel(cat.id, tryT)}
                                 </option>
                             ))}
                         </select>
@@ -164,7 +172,7 @@ export default function EditMed() {
                     {/* Opcjonalnie uwagi */}
                     <textarea
                         name="notes"
-                        placeholder="Uwagi"
+                        placeholder={t("common.notes")}
                         value={form.notes}
                         onChange={handleChange}
                         className="border dark:border-zinc-700 rounded p-2"
@@ -174,7 +182,7 @@ export default function EditMed() {
                         type="submit"
                         className="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded"
                     >
-                        Zapisz zmiany
+                        {t("common.saveChanges")}
                     </button>
                 </form>
             </div>

@@ -5,6 +5,8 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { addDoc, collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
 import ThemeToggle from "../components/ThemeToggle";
+import LanguageToggle from "../components/LanguageToggle";
+import { useI18n } from "../i18n/context";
 import { auth, db } from "../lib/firebase";
 
 type Gender = "male" | "female" | "other";
@@ -31,17 +33,18 @@ export default function Register() {
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
     const navigate = useNavigate();
+    const { t, tn } = useI18n();
 
     function mapFirebaseError(e: FirebaseError): string {
         switch (e.code) {
             case "auth/email-already-in-use":
-                return "Ten email jest już zajęty.";
+                return t("register.err.inUse");
             case "auth/invalid-email":
-                return "Nieprawidłowy adres email.";
+                return t("register.err.email");
             case "auth/weak-password":
-                return "Hasło jest zbyt słabe (min. 6 znaków).";
+                return t("register.err.weak");
             default:
-                return `Błąd rejestracji: ${e.message}`;
+                return t("register.err.firebase", { message: e.message });
         }
     }
 
@@ -85,7 +88,7 @@ export default function Register() {
             navigate("/mymeds");
         } catch (err) {
             if (err instanceof FirebaseError) setError(mapFirebaseError(err));
-            else setError("Nieznany błąd rejestracji.");
+            else setError(t("register.err.unknown"));
         } finally {
             setBusy(false);
         }
@@ -95,18 +98,21 @@ export default function Register() {
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 dark:from-zinc-950 via-white dark:via-zinc-900 to-slate-50 dark:to-indigo-950">
-            <ThemeToggle className="absolute right-4 top-4" />
+            <div className="absolute right-4 top-4 flex items-center gap-2">
+                <LanguageToggle />
+                <ThemeToggle />
+            </div>
             <div className="w-full max-w-lg bg-white dark:bg-zinc-900 shadow-lg rounded-2xl p-8">
                 <div className="mb-6 flex flex-col items-center gap-2">
                     <img src="/logo.svg" alt="" className="h-14 w-14" />
-                    <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Domowa Apteczka</p>
-                    <h1 className="text-2xl font-bold">Rejestracja</h1>
+                    <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">{t("app.name")}</p>
+                    <h1 className="text-2xl font-bold">{t("register.title")}</h1>
                 </div>
 
                 <form onSubmit={handleRegister} className="space-y-4">
                     {/* 1) Imię i nazwisko */}
                     <div>
-                        <label className="block text-sm font-medium">Imię i nazwisko</label>
+                        <label className="block text-sm font-medium">{t("person.fullName")}</label>
                         <input
                             className="w-full border dark:border-zinc-700 rounded p-2"
                             value={name}
@@ -118,7 +124,7 @@ export default function Register() {
 
                     {/* 2) Data urodzenia */}
                     <div>
-                        <label className="block text-sm font-medium">Data urodzenia</label>
+                        <label className="block text-sm font-medium">{t("person.birthDate")}</label>
                         <input
                             type="date"
                             className="w-full border dark:border-zinc-700 rounded p-2"
@@ -129,28 +135,28 @@ export default function Register() {
                         />
                         {birthDate && (
                             <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">
-                                Wiek: <b>{computeAge(birthDate)}</b> lat
+                                {tn("person.age", computeAge(birthDate))}
                             </p>
                         )}
                     </div>
 
                     {/* 3) Płeć */}
                     <div>
-                        <label className="block text-sm font-medium">Płeć</label>
+                        <label className="block text-sm font-medium">{t("person.gender")}</label>
                         <select
                             value={gender}
                             onChange={(e) => setGender(e.target.value as Gender)}
                             className="w-full h-10 rounded-md border dark:border-zinc-700 px-3 bg-white dark:bg-zinc-900 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
                         >
-                            <option value="male">Mężczyzna</option>
-                            <option value="female">Kobieta</option>
-                            <option value="other">Inna / nie chcę podawać</option>
+                            <option value="male">{t("gender.male")}</option>
+                            <option value="female">{t("gender.female")}</option>
+                            <option value="other">{t("gender.other")}</option>
                         </select>
                     </div>
 
                     {/* 4) Email */}
                     <div>
-                        <label className="block text-sm font-medium">Email</label>
+                        <label className="block text-sm font-medium">{t("common.email")}</label>
                         <input
                             type="email"
                             className="w-full border dark:border-zinc-700 rounded p-2"
@@ -164,7 +170,7 @@ export default function Register() {
 
                     {/* 5) Hasło */}
                     <div>
-                        <label className="block text-sm font-medium">Hasło</label>
+                        <label className="block text-sm font-medium">{t("login.password")}</label>
                         <input
                             type="password"
                             className="w-full border dark:border-zinc-700 rounded p-2"
@@ -183,14 +189,14 @@ export default function Register() {
                         disabled={busy}
                         className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-60"
                     >
-                        {busy ? "Zakładam konto…" : "Zarejestruj"}
+                        {busy ? t("register.busy") : t("register.submit")}
                     </button>
                 </form>
 
                 <p className="text-sm text-gray-500 dark:text-zinc-400 mt-4 text-center">
-                    Masz już konto?{" "}
-                    <Link to="/login" className="text-indigo-600 dark:text-indigo-400 hover:underline">
-                        Zaloguj się
+                    {t("register.haveAccount")}{" "}
+                    <Link to="/" className="text-indigo-600 dark:text-indigo-400 hover:underline">
+                        {t("register.login")}
                     </Link>
                 </p>
             </div>

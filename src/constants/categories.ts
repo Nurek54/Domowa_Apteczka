@@ -1,4 +1,5 @@
 // src/constants/categories.ts
+// Etykiety kategorii są w src/i18n/translations.ts pod kluczami "category.<id>".
 
 export type MedCategory =
     | "pain"
@@ -19,26 +20,25 @@ export type MedCategory =
 
 export type CategoryDef = {
     id: MedCategory;
-    label: string;  // PL opis do UI
-    emoji: string;  // emoji do UI
+    emoji: string; // emoji do UI
 };
 
 export const CATEGORIES: CategoryDef[] = [
-    { id: "pain",        label: "Ból / przeciwbólowe",                 emoji: "💊" },
-    { id: "fever",       label: "Gorączka / przeciwgorączkowe",        emoji: "🌡️" },
-    { id: "cold_flu",    label: "Przeziębienie / grypa",               emoji: "🤧" },
-    { id: "cough",       label: "Kaszel",                              emoji: "🗣️" },
-    { id: "allergy",     label: "Alergia / antyhistaminowe",           emoji: "🌼" },
-    { id: "gastro",      label: "Żołądek / jelita",                    emoji: "🧃" },
-    { id: "derma",       label: "Skóra / dermatologia",                emoji: "🧴" },
-    { id: "wound",       label: "Rany / opatrunki / antyseptyki",      emoji: "🩹" },
-    { id: "vitamins",    label: "Witaminy / suplementy",               emoji: "💪" },
-    { id: "kids",        label: "Dziecięce",                           emoji: "🧒" },
-    { id: "cardio",      label: "Układ krążenia",                      emoji: "❤️" },
-    { id: "respiratory", label: "Układ oddechowy",                     emoji: "🫁" },
-    { id: "diabetes",    label: "Cukrzyca",                            emoji: "🩸" },
-    { id: "antibiotic",  label: "Antybiotyki (na receptę)",            emoji: "🧫" },
-    { id: "other",       label: "Inne",                                emoji: "🏷️" },
+    { id: "pain",        emoji: "💊" },
+    { id: "fever",       emoji: "🌡️" },
+    { id: "cold_flu",    emoji: "🤧" },
+    { id: "cough",       emoji: "🗣️" },
+    { id: "allergy",     emoji: "🌼" },
+    { id: "gastro",      emoji: "🧃" },
+    { id: "derma",       emoji: "🧴" },
+    { id: "wound",       emoji: "🩹" },
+    { id: "vitamins",    emoji: "💪" },
+    { id: "kids",        emoji: "🧒" },
+    { id: "cardio",      emoji: "❤️" },
+    { id: "respiratory", emoji: "🫁" },
+    { id: "diabetes",    emoji: "🩸" },
+    { id: "antibiotic",  emoji: "🧫" },
+    { id: "other",       emoji: "🏷️" },
 ];
 
 export const CATEGORY_BY_ID: Record<MedCategory, CategoryDef> =
@@ -47,9 +47,16 @@ export const CATEGORY_BY_ID: Record<MedCategory, CategoryDef> =
         return acc;
     }, {} as Record<MedCategory, CategoryDef>);
 
-export function formatCategoryForDisplay(raw?: string): string {
-    if (!raw) return `${CATEGORY_BY_ID.other.emoji} ${CATEGORY_BY_ID.other.label}`;
-    const known = CATEGORY_BY_ID[raw as MedCategory];
-    if (known) return `${known.emoji} ${known.label}`;
-    return `🏷️ ${raw}`;
+type Translate = (key: string) => string | null;
+
+/** Etykieta kategorii w bieżącym języku; stare wpisy z wolnym tekstem zwracane bez zmian. */
+export function categoryLabel(raw: string | undefined, tryT: Translate): string {
+    const id = (raw || "other").trim();
+    return tryT(`category.${id}`) ?? id;
+}
+
+export function formatCategoryForDisplay(raw: string | undefined, tryT: Translate): string {
+    const id = (raw || "other").trim();
+    const known = CATEGORY_BY_ID[id as MedCategory];
+    return `${known ? known.emoji : "🏷️"} ${categoryLabel(id, tryT)}`;
 }

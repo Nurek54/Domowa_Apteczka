@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import { useI18n } from "../i18n/context";
+import type { TranslationKey } from "../i18n/translations";
 import { auth, db } from "../lib/firebase";
 import {
     addDoc,
@@ -46,6 +48,8 @@ export default function Family() {
     const [newName, setNewName] = useState("");
     const [joinCode, setJoinCode] = useState("");
     const me = auth.currentUser;
+    const { t } = useI18n();
+    const roleLabel = (r: Role) => t(`role.${r}` as TranslationKey);
 
     const canManage = (f: FamilyVM) => f.myRole === "owner" || f.myRole === "admin";
 
@@ -83,7 +87,7 @@ export default function Family() {
 
                 res.push({
                     id: f.id,
-                    name: data.name || "Family",
+                    name: data.name || t("family.defaultName"),
                     inviteCode: data.inviteCode,
                     myRole,
                     members,
@@ -115,7 +119,7 @@ export default function Family() {
                 inviteCode: code,
                 myRole: "owner",
                 members: [
-                    { uid: me.uid, name: me.displayName || "Ty", email: me.email, role: "owner" },
+                    { uid: me.uid, name: me.displayName || t("family.you"), email: me.email, role: "owner" },
                 ],
             },
         ]);
@@ -126,7 +130,7 @@ export default function Family() {
         if (!me || !joinCode.trim()) return;
         const qCode = query(collection(db, "family"), where("inviteCode", "==", joinCode.trim().toUpperCase()));
         const match = await getDocs(qCode);
-        if (match.empty) return alert("Nie znaleziono rodziny o podanym kodzie.");
+        if (match.empty) return alert(t("family.codeNotFound"));
         const ref = match.docs[0].ref as any;
 
         await updateDoc(ref, {
@@ -145,7 +149,7 @@ export default function Family() {
                 name: d.name,
                 myRole: "member",
                 inviteCode: d.inviteCode,
-                members: [{ uid: me.uid, name: me.displayName || "Ty", email: me.email, role: "member" }],
+                members: [{ uid: me.uid, name: me.displayName || t("family.you"), email: me.email, role: "member" }],
             };
             return exists ? prev : [...prev, item];
         });
@@ -167,7 +171,7 @@ export default function Family() {
         // znajdź użytkownika po emailu
         const qU = query(collection(db, "users"), where("email", "==", email.trim().toLowerCase()));
         const res = await getDocs(qU);
-        if (res.empty) return alert("Nie znaleziono użytkownika o tym e-mailu.");
+        if (res.empty) return alert(t("family.userNotFound"));
         const targetId = res.docs[0].id;
 
         await updateDoc(doc(db, "family", familyId), {
@@ -221,7 +225,7 @@ export default function Family() {
     };
 
     const deleteFamily = async (familyId: string) => {
-        if (!confirm("Na pewno usunąć rodzinę?")) return;
+        if (!confirm(t("family.confirmDelete"))) return;
         await deleteDoc(doc(db, "family", familyId));
         setFamilies((prev) => prev.filter((f) => f.id !== familyId));
     };
@@ -231,42 +235,42 @@ export default function Family() {
         <DashboardLayout>
             <div className="max-w-4xl mx-auto space-y-6">
                 <div>
-                    <h1 className="text-2xl font-semibold">👨‍👩‍👧 Rodzina</h1>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">Zarządzaj rodzinami, rolami i członkami.</p>
+                    <h1 className="text-2xl font-semibold">{t("family.heading")}</h1>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">{t("family.subtitle")}</p>
                 </div>
 
                 {/* Tworzenie / Dołączanie */}
                 <div className="grid md:grid-cols-2 gap-4">
                     <div className="card">
-                        <h3 className="font-medium mb-2">➕ Utwórz rodzinę</h3>
+                        <h3 className="font-medium mb-2">{t("family.create")}</h3>
                         <div className="flex gap-2">
                             <input
                                 className="flex-1 rounded-lg border dark:border-zinc-700 px-3 py-2"
-                                placeholder="Nazwa rodziny"
+                                placeholder={t("family.namePlaceholder")}
                                 value={newName}
                                 onChange={(e) => setNewName(e.target.value)}
                             />
-                            <button onClick={createFamily} className="btn-primary">Utwórz</button>
+                            <button onClick={createFamily} className="btn-primary">{t("family.createBtn")}</button>
                         </div>
                     </div>
                     <div className="card">
-                        <h3 className="font-medium mb-2">🔗 Dołącz kodem</h3>
+                        <h3 className="font-medium mb-2">{t("family.join")}</h3>
                         <div className="flex gap-2">
                             <input
                                 className="flex-1 rounded-lg border dark:border-zinc-700 px-3 py-2 uppercase"
-                                placeholder="KOD"
+                                placeholder={t("family.codePlaceholder")}
                                 value={joinCode}
                                 onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                             />
-                            <button onClick={joinFamilyByCode} className="btn">Dołącz</button>
+                            <button onClick={joinFamilyByCode} className="btn">{t("family.joinBtn")}</button>
                         </div>
                     </div>
                 </div>
 
                 {loading ? (
-                    <p className="text-zinc-500 dark:text-zinc-400">Ładowanie…</p>
+                    <p className="text-zinc-500 dark:text-zinc-400">{t("common.loading")}</p>
                 ) : families.length === 0 ? (
-                    <p className="text-zinc-500 dark:text-zinc-400">Nie należysz jeszcze do żadnej rodziny.</p>
+                    <p className="text-zinc-500 dark:text-zinc-400">{t("family.none")}</p>
                 ) : (
                     <div className="space-y-6">
                         {families.map((fam) => (
@@ -275,9 +279,9 @@ export default function Family() {
                                     <div>
                                         <h2 className="text-lg font-semibold">{fam.name}</h2>
                                         <div className="flex items-center gap-2">
-                                            <span className="pill-ok">Twoja rola: {fam.myRole}</span>
+                                            <span className="pill-ok">{t("family.yourRole", { role: roleLabel(fam.myRole) })}</span>
                                             {fam.inviteCode && (
-                                                <span className="pill-warn">Kod: {fam.inviteCode}</span>
+                                                <span className="pill-warn">{t("family.code", { code: fam.inviteCode })}</span>
                                             )}
                                         </div>
                                     </div>
@@ -286,14 +290,14 @@ export default function Family() {
                                             <button
                                                 className="btn"
                                                 onClick={() => {
-                                                    const newN = prompt("Nowa nazwa rodziny", fam.name);
+                                                    const newN = prompt(t("family.renamePrompt"), fam.name);
                                                     if (newN && newN.trim()) renameFamily(fam.id, newN.trim());
                                                 }}
                                             >
-                                                ✏️ Zmień nazwę
+                                                {t("family.rename")}
                                             </button>
                                             <button className="btn" onClick={() => rotateInvite(fam.id)}>
-                                                ♻️ Odśwież kod
+                                                {t("family.refreshCode")}
                                             </button>
                                         </div>
                                     )}
@@ -314,22 +318,22 @@ export default function Family() {
                                                     value={m.role}
                                                     onChange={(e) => setRole(fam.id, m.uid, e.target.value as Role)}
                                                     disabled={!canManage(fam) || m.uid === fam.members.find(x=>x.role==="owner")?.uid}
-                                                    title={!canManage(fam) ? "Brak uprawnień" : ""}
+                                                    title={!canManage(fam) ? t("family.noPermission") : ""}
                                                 >
-                                                    <option value="owner" disabled>owner</option>
-                                                    <option value="admin">admin</option>
-                                                    <option value="member">member</option>
-                                                    <option value="viewer">viewer</option>
+                                                    <option value="owner" disabled>{roleLabel("owner")}</option>
+                                                    <option value="admin">{roleLabel("admin")}</option>
+                                                    <option value="member">{roleLabel("member")}</option>
+                                                    <option value="viewer">{roleLabel("viewer")}</option>
                                                 </select>
 
                                                 {me?.uid === m.uid ? (
-                                                    <button className="btn" onClick={() => leaveFamily(fam.id)}>🚪 Opuść</button>
+                                                    <button className="btn" onClick={() => leaveFamily(fam.id)}>{t("family.leave")}</button>
                                                 ) : canManage(fam) ? (
-                                                    <button className="btn" onClick={() => removeMember(fam.id, m.uid)}>🗑️ Usuń</button>
+                                                    <button className="btn" onClick={() => removeMember(fam.id, m.uid)}>{t("family.remove")}</button>
                                                 ) : null}
 
                                                 <Link to={`/family/${fam.id}/member/${m.uid}`} className="btn">
-                                                    💊 Leki
+                                                    {t("family.meds")}
                                                 </Link>
                                             </div>
                                         </div>
@@ -341,7 +345,7 @@ export default function Family() {
                                     <div className="mt-4 flex items-center gap-2">
                                         <input
                                             className="flex-1 rounded-lg border dark:border-zinc-700 px-3 py-2"
-                                            placeholder="E-mail użytkownika"
+                                            placeholder={t("family.emailPlaceholder")}
                                             onKeyDown={(e) => {
                                                 if (e.key === "Enter") {
                                                     const input = e.currentTarget as HTMLInputElement;
@@ -353,16 +357,16 @@ export default function Family() {
                                         <button
                                             className="btn"
                                             onClick={() => {
-                                                const email = prompt("Podaj e-mail użytkownika do dodania");
+                                                const email = prompt(t("family.addByEmailPrompt"));
                                                 if (email) addMemberByEmail(fam.id, email, "member");
                                             }}
                                         >
-                                            ➕ Dodaj po e-mailu
+                                            {t("family.addByEmail")}
                                         </button>
 
                                         {fam.myRole === "owner" && (
                                             <button className="btn" onClick={() => deleteFamily(fam.id)}>
-                                                ❌ Usuń rodzinę
+                                                {t("family.delete")}
                                             </button>
                                         )}
                                     </div>

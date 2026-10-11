@@ -7,6 +7,8 @@ import {
     onAuthStateChanged,
 } from "firebase/auth";
 import ThemeToggle from "../components/ThemeToggle";
+import LanguageToggle from "../components/LanguageToggle";
+import { useI18n } from "../i18n/context";
 import { auth, db, googleProvider } from "../lib/firebase";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
@@ -16,6 +18,7 @@ export default function Login() {
     const [error, setError] = useState("");
     const [busy, setBusy] = useState(false);
     const navigate = useNavigate();
+    const { t } = useI18n();
 
     // 🔹 jeśli użytkownik jest już zalogowany → przekieruj na /mymeds
     useEffect(() => {
@@ -25,19 +28,19 @@ export default function Login() {
         return () => unsub();
     }, [navigate]);
 
-    // 🔹 mapowanie błędów Firebase na PL komunikaty
+    // 🔹 mapowanie błędów Firebase na komunikaty w bieżącym języku
     function mapAuthError(code?: string) {
         switch (code) {
             case "auth/invalid-credential":
             case "auth/wrong-password":
             case "auth/user-not-found":
-                return "Nieprawidłowy email lub hasło.";
+                return t("login.err.credentials");
             case "auth/invalid-email":
-                return "Nieprawidłowy adres email.";
+                return t("login.err.email");
             case "auth/popup-closed-by-user":
-                return "Okno logowania zostało zamknięte.";
+                return t("login.err.popup");
             default:
-                return "Wystąpił błąd logowania. Spróbuj ponownie.";
+                return t("login.err.generic");
         }
     }
 
@@ -67,7 +70,7 @@ export default function Login() {
             const userSnap = await getDoc(userRef);
 
             if (!userSnap.exists()) {
-                // 🆕 Jeśli to pierwsze logowanie — tworzymy szkic profilu
+                // 🆕 pierwsze logowanie: tworzymy szkic profilu
                 await setDoc(userRef, {
                     uid: user.uid,
                     email: user.email || "",
@@ -81,7 +84,7 @@ export default function Login() {
             }
         } catch (err: any) {
             console.error(err);
-            setError(mapAuthError(err?.code) || "Nie udało się zalogować przez Google.");
+            setError(mapAuthError(err?.code));
         } finally {
             setBusy(false);
         }
@@ -89,18 +92,21 @@ export default function Login() {
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 dark:from-zinc-950 via-white dark:via-zinc-900 to-slate-50 dark:to-indigo-950">
-            <ThemeToggle className="absolute right-4 top-4" />
+            <div className="absolute right-4 top-4 flex items-center gap-2">
+                <LanguageToggle />
+                <ThemeToggle />
+            </div>
             <div className="w-full max-w-md bg-white dark:bg-zinc-900 shadow-lg rounded-xl p-8">
                 <div className="mb-6 flex flex-col items-center gap-2">
                     <img src="/logo.svg" alt="" className="h-14 w-14" />
-                    <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">Domowa Apteczka</p>
-                    <h1 className="text-2xl font-bold">Zaloguj się</h1>
+                    <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">{t("app.name")}</p>
+                    <h1 className="text-2xl font-bold">{t("login.title")}</h1>
                 </div>
 
                 <form onSubmit={handleEmailLogin} className="space-y-4">
                     <input
                         type="email"
-                        placeholder="Email"
+                        placeholder={t("common.email")}
                         className="w-full border dark:border-zinc-700 p-2 rounded"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -109,7 +115,7 @@ export default function Login() {
                     />
                     <input
                         type="password"
-                        placeholder="Hasło"
+                        placeholder={t("login.password")}
                         className="w-full border dark:border-zinc-700 p-2 rounded"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -125,25 +131,25 @@ export default function Login() {
                         disabled={busy}
                         className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 disabled:opacity-60"
                     >
-                        {busy ? "Logowanie…" : "Zaloguj się"}
+                        {busy ? t("login.busy") : t("login.submit")}
                     </button>
                 </form>
 
-                <div className="my-4 text-center text-sm text-gray-500 dark:text-zinc-400">lub</div>
+                <div className="my-4 text-center text-sm text-gray-500 dark:text-zinc-400">{t("login.or")}</div>
 
                 <button
                     onClick={handleGoogleLogin}
                     disabled={busy}
                     className="w-full border dark:border-zinc-700 py-2 rounded hover:bg-gray-100 dark:hover:bg-zinc-800 disabled:opacity-60"
                 >
-                    Zaloguj przez Google
+                    {t("login.google")}
                 </button>
 
                 {/* Link do rejestracji */}
                 <p className="text-sm text-gray-500 dark:text-zinc-400 mt-4 text-center">
-                    Nie masz konta?{" "}
+                    {t("login.noAccount")}{" "}
                     <Link to="/register" className="text-indigo-600 dark:text-indigo-400 hover:underline">
-                        Zarejestruj się
+                        {t("login.register")}
                     </Link>
                 </p>
             </div>

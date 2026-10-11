@@ -35,7 +35,7 @@
 
 **Domowa Apteczka** (*home medicine cabinet*) is a single-page web app for keeping the medicines at home under control. Add what you have with dose, quantity, category and expiry date; the dashboard tells you at a glance what is **still valid**, what **expires within 30 days** and what is **already expired**. Turn a prescription into a **treatment plan** (weekdays, hours, start and optional end date) and see every dose laid out on a monthly calendar.
 
-Medicine cabinets are usually shared, so the app has **families**: create a group, invite people with a short code or by e-mail, give them a role (**owner**, **admin**, **member**, **viewer**) and look into each other's medicines. The interface comes in a **light and a dark theme** that follows your system until you pick one. Everything runs in the browser on top of **Firebase Authentication** (e-mail + Google) and **Cloud Firestore**; there is no custom backend to host.
+Medicine cabinets are usually shared, so the app has **families**: create a group, invite people with a short code or by e-mail, give them a role (**owner**, **admin**, **member**, **viewer**) and look into each other's medicines. The interface is available in **Polish and English** (switched with a flag) and in a **light and a dark theme**; both follow your browser and system settings until you pick one. Everything runs in the browser on top of **Firebase Authentication** (e-mail + Google) and **Cloud Firestore**; there is no custom backend to host.
 
 <p align="center"><b>Keywords</b></p>
 
@@ -68,6 +68,7 @@ Medicine cabinets are usually shared, so the app has **families**: create a grou
       <img src="https://img.shields.io/badge/Role--based%20Access-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjAgMTNjMCA1LTMuNSA3LjUtNy42NiA4Ljk1YTEgMSAwIDAgMS0uNjctLjAxQzcuNSAyMC41IDQgMTggNCAxM1Y2YTEgMSAwIDAgMSAxLTFjMiAwIDQuNS0xLjIgNi4yNC0yLjcyYTEuMTcgMS4xNyAwIDAgMSAxLjUyIDBDMTQuNTEgMy44MSAxNyA1IDE5IDVhMSAxIDAgMCAxIDEgMXoiIC8%2BIDxwYXRoIGQ9Im05IDEyIDIgMiA0LTQiIC8%2BIDwvc3ZnPg%3D%3D" alt="Role-based Access" />
       <img src="https://img.shields.io/badge/CRUD-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjEuMTc0IDYuODEyYTEgMSAwIDAgMC0zLjk4Ni0zLjk4N0wzLjg0MiAxNi4xNzRhMiAyIDAgMCAwLS41LjgzbC0xLjMyMSA0LjM1MmEuNS41IDAgMCAwIC42MjMuNjIybDQuMzUzLTEuMzJhMiAyIDAgMCAwIC44My0uNDk3eiIgLz4gPHBhdGggZD0ibTE1IDUgNCA0IiAvPiA8L3N2Zz4%3D" alt="CRUD" />
       <img src="https://img.shields.io/badge/Dark%20Mode-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMTIgM2E2IDYgMCAwIDAgOSA5IDkgOSAwIDEgMS05LTlaIiAvPiA8L3N2Zz4%3D" alt="Dark Mode" />
+      <img src="https://img.shields.io/badge/i18n%20%28PL%20%2F%20EN%29-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJtNSA4IDYgNiIgLz4gPHBhdGggZD0ibTQgMTQgNi02IDItMyIgLz4gPHBhdGggZD0iTTIgNWgxMiIgLz4gPHBhdGggZD0iTTcgMmgxIiAvPiA8cGF0aCBkPSJtMjIgMjItNS0xMC01IDEwIiAvPiA8cGF0aCBkPSJNMTQgMThoNiIgLz4gPC9zdmc%2B" alt="i18n (PL / EN)" />
       <img src="https://img.shields.io/badge/Calendar%20Scheduling-334155?style=flat-square&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgPiA8cGF0aCBkPSJNMjEgNy41VjZhMiAyIDAgMCAwLTItMkg1YTIgMiAwIDAgMC0yIDJ2MTRhMiAyIDAgMCAwIDIgMmgzLjUiIC8%2BIDxwYXRoIGQ9Ik0xNiAydjQiIC8%2BIDxwYXRoIGQ9Ik04IDJ2NCIgLz4gPHBhdGggZD0iTTMgMTBoNSIgLz4gPHBhdGggZD0iTTE3LjUgMTcuNSAxNiAxNi4zVjE0IiAvPiA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSI2IiAvPiA8L3N2Zz4%3D" alt="Calendar Scheduling" />
     </td>
   </tr>
@@ -92,10 +93,10 @@ Medicine cabinets are usually shared, so the app has **families**: create a grou
 ## See it in action
 
 <p align="center">
-  <img src="docs/demo.gif" alt="Demo: log in, filter medicines by expiry status, change a quantity, add a medicine, open the treatment calendar, change a family member's role and open their medicines" width="100%" />
+  <img src="docs/en/demo.gif" alt="Demo: log in, filter medicines by expiry status, change a quantity, add a medicine, open the treatment calendar, change a family member's role and open their medicines" width="100%" />
 </p>
 
-<p align="center"><sub>Login → expiry tiles as filters → quantity +/− → dark mode → new medicine → treatment calendar → back to light → family roles → a member's medicines.</sub></p>
+<p align="center"><sub>Login → expiry tiles as filters → quantity +/− → dark mode → new medicine → treatment calendar → back to light → family roles → a member's medicines → flag switch to Polish and back.</sub></p>
 
 ## Highlights
 
@@ -141,9 +142,9 @@ Medicine cabinets are usually shared, so the app has **families**: create a grou
       <sub>Firebase Authentication with e-mail + password or a Google account, plus a profile page (name, date of birth with computed age, password change).</sub>
     </td>
     <td width="33%" valign="top">
-      <img src="docs/icons/sun-moon.svg" width="44" alt="" /><br />
-      <b>Light and dark theme</b><br />
-      <sub>A sun / moon switch in the header and on the login page. Defaults to the system setting, remembers your choice and is applied before the first paint, so there is no white flash.</sub>
+      <img src="docs/icons/languages.svg" width="44" alt="" /><br />
+      <b>Polish or English, light or dark</b><br />
+      <sub>Flag and sun / moon switches in the header and on the login page. Both start from the browser and system settings, remember your choice, and the theme is applied before the first paint.</sub>
     </td>
     <td width="33%" valign="top">
       <img src="docs/icons/flame.svg" width="44" alt="" /><br />
@@ -156,27 +157,27 @@ Medicine cabinets are usually shared, so the app has **families**: create a grou
 ## Screenshots
 
 <p align="center">
-  <img src="docs/hero.png" alt="The medicine dashboard in the light theme (back) and the dark theme (front)" width="100%" />
+  <img src="docs/en/hero.png" alt="The medicine dashboard in the light theme (back) and the dark theme (front)" width="100%" />
 </p>
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <img src="docs/screenshots/split/02-filtered.png" alt="Medicines filtered to those expiring within 30 days, light and dark theme" />
+      <img src="docs/en/screenshots/split/02-filtered.png" alt="Medicines filtered to those expiring within 30 days, light and dark theme" />
       <p align="center"><b>What runs out soon?</b><br /><sub>Clicking a tile filters the list; badges show how many days are left.</sub></p>
     </td>
     <td width="50%" valign="top">
-      <img src="docs/screenshots/split/03-addmed.png" alt="Add medicine form, light and dark theme" />
+      <img src="docs/en/screenshots/split/03-addmed.png" alt="Add medicine form, light and dark theme" />
       <p align="center"><b>Add a medicine</b><br /><sub>Dose, quantity and unit, one of 15 categories, expiry date and notes.</sub></p>
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <img src="docs/screenshots/split/05-addplan.png" alt="Treatment plan form, light and dark theme" />
+      <img src="docs/en/screenshots/split/05-addplan.png" alt="Treatment plan form, light and dark theme" />
       <p align="center"><b>Create a treatment plan</b><br /><sub>Weekdays, any number of hours, start and optional end date.</sub></p>
     </td>
     <td width="50%" valign="top">
-      <img src="docs/screenshots/split/06-family.png" alt="Family management, light and dark theme" />
+      <img src="docs/en/screenshots/split/06-family.png" alt="Family management, light and dark theme" />
       <p align="center"><b>Family and roles</b><br /><sub>Invite code, roles per member and a shortcut to each member's medicines.</sub></p>
     </td>
   </tr>
@@ -190,17 +191,17 @@ Medicine cabinets are usually shared, so the app has **families**: create a grou
   <tr>
     <td width="50%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/04-plans.png" />
-        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/04-plans.png" />
-        <img src="docs/screenshots/04-plans.png" alt="Treatment calendar" />
+        <source media="(prefers-color-scheme: dark)" srcset="docs/en/screenshots/dark/04-plans.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/en/screenshots/04-plans.png" />
+        <img src="docs/en/screenshots/04-plans.png" alt="Treatment calendar" />
       </picture>
       <p align="center"><b>Treatment calendar</b></p>
     </td>
     <td width="50%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/07-member.png" />
-        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/07-member.png" />
-        <img src="docs/screenshots/07-member.png" alt="Family member's medicines" />
+        <source media="(prefers-color-scheme: dark)" srcset="docs/en/screenshots/dark/07-member.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/en/screenshots/07-member.png" />
+        <img src="docs/en/screenshots/07-member.png" alt="Family member's medicines" />
       </picture>
       <p align="center"><b>A family member's medicines</b></p>
     </td>
@@ -208,17 +209,17 @@ Medicine cabinets are usually shared, so the app has **families**: create a grou
   <tr>
     <td width="50%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/08-profile.png" />
-        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/08-profile.png" />
-        <img src="docs/screenshots/08-profile.png" alt="Profile" />
+        <source media="(prefers-color-scheme: dark)" srcset="docs/en/screenshots/dark/08-profile.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/en/screenshots/08-profile.png" />
+        <img src="docs/en/screenshots/08-profile.png" alt="Profile" />
       </picture>
       <p align="center"><b>Profile and password</b></p>
     </td>
     <td width="50%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/10-editmed.png" />
-        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/10-editmed.png" />
-        <img src="docs/screenshots/10-editmed.png" alt="Edit medicine" />
+        <source media="(prefers-color-scheme: dark)" srcset="docs/en/screenshots/dark/10-editmed.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/en/screenshots/10-editmed.png" />
+        <img src="docs/en/screenshots/10-editmed.png" alt="Edit medicine" />
       </picture>
       <p align="center"><b>Edit a medicine</b></p>
     </td>
@@ -226,17 +227,17 @@ Medicine cabinets are usually shared, so the app has **families**: create a grou
   <tr>
     <td width="50%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/01-dashboard.png" />
-        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/01-dashboard.png" />
-        <img src="docs/screenshots/01-dashboard.png" alt="Dashboard" />
+        <source media="(prefers-color-scheme: dark)" srcset="docs/en/screenshots/dark/01-dashboard.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/en/screenshots/01-dashboard.png" />
+        <img src="docs/en/screenshots/01-dashboard.png" alt="Dashboard" />
       </picture>
       <p align="center"><b>Dashboard</b></p>
     </td>
     <td width="50%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/dark/09-login.png" />
-        <source media="(prefers-color-scheme: light)" srcset="docs/screenshots/09-login.png" />
-        <img src="docs/screenshots/09-login.png" alt="Login" />
+        <source media="(prefers-color-scheme: dark)" srcset="docs/en/screenshots/dark/09-login.png" />
+        <source media="(prefers-color-scheme: light)" srcset="docs/en/screenshots/09-login.png" />
+        <img src="docs/en/screenshots/09-login.png" alt="Login" />
       </picture>
       <p align="center"><b>Login (e-mail or Google)</b></p>
     </td>
@@ -285,6 +286,18 @@ document.documentElement.classList.toggle("dark", theme === "dark");
 ```
 
 Native controls (selects, date pickers, scrollbars) switch too, because `color-scheme` follows the active theme.
+
+### Polish and English
+
+All interface text lives in one dictionary, `src/i18n/translations.ts`, with a Polish and an English entry per key; TypeScript refuses to build if the English side is missing a key. `useI18n()` returns `t(key, params)` for plain strings and `tn(key, count)` for plurals, which picks the right form with `Intl.PluralRules` (Polish has three: *1 dzień*, *2 dni*, *5 dni*). The month name in the calendar comes from the matching `date-fns` locale, category names are translated by id, and the chosen language is stored in `localStorage` and set on `<html lang>`.
+
+```ts
+const { t, tn } = useI18n();
+t("meds.hello", { name: "Grzegorz" });  // "Cześć, Grzegorz" / "Hello, Grzegorz"
+tn("meds.pill.soon", 15);               // "< 30 dni • za 15 dni" / "< 30 days • in 15 days"
+```
+
+The flags are small inline SVGs rather than emoji, because Windows does not render flag emoji.
 
 ### Families and roles
 
@@ -462,6 +475,7 @@ Medicines live in their own collection and a user's cabinet is a list of ids in 
 |---|---|
 | UI | React 19, TypeScript 5.9 |
 | Routing | React Router 7 (`BrowserRouter`, protected routes) |
+| i18n | Own lightweight dictionary + React context, `Intl.PluralRules`, `date-fns` locales |
 | Styling | Tailwind CSS 4 (`@tailwindcss/postcss`), class-based dark mode (`@custom-variant dark`), a few component classes (`btn`, `card`, status pills) |
 | Build | Vite 7 (`rolldown-vite`), `@vitejs/plugin-react` |
 | Dates | date-fns 4 |
@@ -479,11 +493,16 @@ Domowa_Apteczka/
 │   └── firebase-messaging-sw.js
 ├── src/
 │   ├── components/
-│   │   ├── DashboardLayout.tsx    # sidebar, page title, theme switch, sign-out
+│   │   ├── DashboardLayout.tsx    # sidebar, page title, language and theme switches, sign-out
+│   │   ├── LanguageToggle.tsx     # PL / EN flag switch
 │   │   ├── ThemeToggle.tsx        # sun / moon switch
 │   │   └── ProtectedRoute.tsx     # redirects signed-out users to "/"
 │   ├── constants/
-│   │   └── categories.ts          # 15 categories (id, Polish label, emoji)
+│   │   └── categories.ts          # 15 categories (id, emoji), labels come from i18n
+│   ├── i18n/
+│   │   ├── translations.ts        # every UI string in Polish and English
+│   │   ├── I18nProvider.tsx       # language state, t() and tn()
+│   │   └── context.ts             # useI18n()
 │   ├── lib/
 │   │   ├── firebase.ts            # Firebase app, auth, db, Google provider
 │   │   └── theme.ts               # useTheme(): stored choice or system theme
@@ -550,7 +569,6 @@ npm run dev
 - **Permissions are checked in the UI.** Roles decide which buttons are enabled; real protection needs Firestore Security Rules that enforce the same rules on the server.
 - **Member and viewer currently have the same rights.** Both see other members' medicines read-only; `viewer` is ready for stricter rules.
 - **No reminders yet.** `public/firebase-messaging-sw.js` is prepared for Firebase Cloud Messaging, but push notifications for doses are not wired up.
-- **Polish UI.** Labels and category names are in Polish.
 
 ## License
 

@@ -1,5 +1,7 @@
 // src/components/ThemeToggle.tsx
 import type { ReactElement } from "react";
+import { useI18n } from "../i18n/context";
+import type { TranslationKey } from "../i18n/translations";
 import { useTheme, type Theme } from "../lib/theme";
 
 const SunIcon = () => (
@@ -15,22 +17,24 @@ const MoonIcon = () => (
     </svg>
 );
 
-const OPTIONS: { value: Theme; label: string; Icon: () => ReactElement }[] = [
-    { value: "light", label: "Jasny motyw", Icon: SunIcon },
-    { value: "dark", label: "Ciemny motyw", Icon: MoonIcon },
+const OPTIONS: { value: Theme; label: TranslationKey; Icon: () => ReactElement }[] = [
+    { value: "light", label: "theme.light", Icon: SunIcon },
+    { value: "dark", label: "theme.dark", Icon: MoonIcon },
 ];
 
 export default function ThemeToggle({ className = "" }: { className?: string }) {
     const { theme, setTheme } = useTheme();
+    const { t } = useI18n();
 
     return (
         <div
             role="group"
-            aria-label="Motyw"
+            aria-label={t("theme.label")}
             className={`inline-flex items-center gap-0.5 rounded-xl p-0.5 ring-1 ring-zinc-200 bg-white/80 dark:ring-zinc-700 dark:bg-zinc-900/80 ${className}`}
         >
-            {OPTIONS.map(({ value, label, Icon }) => {
+            {OPTIONS.map(({ value, label: labelKey, Icon }) => {
                 const active = theme === value;
+                const label = t(labelKey);
                 return (
                     <button
                         key={value}

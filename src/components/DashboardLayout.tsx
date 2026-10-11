@@ -2,12 +2,29 @@ import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
+import { useI18n } from "../i18n/context";
+import type { TranslationKey } from "../i18n/translations";
 import ThemeToggle from "./ThemeToggle";
+import LanguageToggle from "./LanguageToggle";
+
+// Kolejność ma znaczenie: dłuższe ścieżki przed krótszymi o tym samym początku.
+const TITLES: [RegExp, TranslationKey][] = [
+    [/^\/family\/[^/]+\/member\/[^/]+/, "title.memberMeds"],
+    [/^\/family/, "title.family"],
+    [/^\/mymeds/, "title.myMeds"],
+    [/^\/addmed/, "title.addMed"],
+    [/^\/edit-med/, "title.editMed"],
+    [/^\/plans/, "title.plans"],
+    [/^\/addplan/, "title.addPlan"],
+    [/^\/editplan/, "title.editPlan"],
+    [/^\/profile/, "title.profile"],
+];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
     const [displayName, setDisplayName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [authChecked, setAuthChecked] = useState(false);
+    const { t } = useI18n();
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -15,7 +32,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     useEffect(() => {
         const unsub = onAuthStateChanged(auth, (u) => {
             if (!u) {
-                // ✅ u Ciebie nie ma /login – używamy "/"
+                // strona logowania jest pod "/"
                 navigate("/", { replace: true });
                 return;
             }
@@ -28,24 +45,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
     const handleLogout = async () => {
         await signOut(auth);
-        // ✅ po wylogowaniu wracamy na "/"
         navigate("/", { replace: true });
     };
 
     const pageTitle = useMemo(() => {
-        const p = location.pathname;
-        if (/^\/family\/[^/]+\/member\/[^/]+/.test(p)) return "Leki członka rodziny";
-        if (p.startsWith("/family")) return "Rodzina";
-        const map: Record<string, string> = {
-            "/mymeds": "Moje leki",
-            "/addmed": "Dodaj lek",
-            "/plans": "Plany leczenia",
-            "/addplan": "Dodaj plan leczenia",
-            "/profile": "Profil",
-        };
-        const key = Object.keys(map).find((k) => p.startsWith(k));
-        return (key && map[key]) || "Dashboard";
-    }, [location.pathname]);
+        const match = TITLES.find(([re]) => re.test(location.pathname));
+        return t(match ? match[1] : "title.dashboard");
+    }, [location.pathname, t]);
 
     const navClass = ({ isActive }: { isActive: boolean }) =>
         `px-3 py-2 rounded-lg transition-colors ${
@@ -57,7 +63,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     if (!authChecked) {
         return (
             <div className="grid place-items-center h-screen text-gray-500 dark:text-zinc-400">
-                Ładowanie…
+                {t("common.loading")}
             </div>
         );
     }
@@ -68,17 +74,16 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <aside className="w-64 bg-white dark:bg-zinc-900 border-r dark:border-zinc-800 p-6 flex flex-col gap-5">
                 <div className="flex items-center gap-2.5">
                     <img src="/logo.svg" alt="" className="h-8 w-8 shrink-0" />
-                    <h2 className="whitespace-nowrap text-base font-bold">Domowa Apteczka</h2>
+                    <h2 className="whitespace-nowrap text-base font-bold">{t("app.name")}</h2>
                 </div>
 
                 <nav className="flex flex-col gap-2 text-sm">
-                    <NavLink to="/mymeds" className={navClass}>💊 Moje leki</NavLink>
-                    <NavLink to="/addmed" className={navClass}>🧪 Dodaj lek</NavLink>
-                    <NavLink to="/plans" className={navClass}>🗓️ Plany</NavLink>
-                    <NavLink to="/addplan" className={navClass}>🩺 Plan leczenia</NavLink>
-                    {/* ✅ nowy link – NavLink (nie <a>) */}
-                    <NavLink to="/family" className={navClass}>👨‍👩‍👧 Rodzina</NavLink>
-                    <NavLink to="/profile" className={navClass}>👤 Profil</NavLink>
+                    <NavLink to="/mymeds" className={navClass}>💊 {t("nav.myMeds")}</NavLink>
+                    <NavLink to="/addmed" className={navClass}>🧪 {t("nav.addMed")}</NavLink>
+                    <NavLink to="/plans" className={navClass}>🗓️ {t("nav.plans")}</NavLink>
+                    <NavLink to="/addplan" className={navClass}>🩺 {t("nav.addPlan")}</NavLink>
+                    <NavLink to="/family" className={navClass}>👨‍👩‍👧 {t("nav.family")}</NavLink>
+                    <NavLink to="/profile" className={navClass}>👤 {t("nav.profile")}</NavLink>
                 </nav>
 
                 <div className="mt-auto rounded-xl bg-gray-50 dark:bg-zinc-800/60 p-3">
@@ -87,7 +92,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                             {(displayName || email || "?").charAt(0).toUpperCase()}
                         </div>
                         <div className="min-w-0">
-                            <p className="text-sm font-medium truncate">{displayName || "Użytkownik"}</p>
+                            <p className="text-sm font-medium truncate">{displayName || t("common.user")}</p>
                             <p className="text-xs text-gray-500 dark:text-zinc-400 truncate">{email}</p>
                         </div>
                     </div>
@@ -99,12 +104,13 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <header className="flex items-center justify-between bg-white dark:bg-zinc-900 border-b dark:border-zinc-800 p-4">
                     <h1 className="text-xl font-semibold">{pageTitle}</h1>
                     <div className="flex items-center gap-3">
+                        <LanguageToggle />
                         <ThemeToggle />
                         <button
                             onClick={handleLogout}
                             className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
                         >
-                            Wyloguj
+                            {t("nav.logout")}
                         </button>
                     </div>
                 </header>
